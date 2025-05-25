@@ -8,7 +8,7 @@ assets:
   twine_token: yegor256/home#assets/twine_token
 install: |
   pdd -f /dev/null
-  pip install uv
+  pip3 install uv
 release:
   pre: false
   script: |-
