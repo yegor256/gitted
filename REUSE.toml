@@ -9,6 +9,7 @@ path = [
     ".gitignore",
     ".pdd",
     ".python-version",
+    "uv.lock",
     "**.md",
     "src/gitted.egg-info/**",
     "tests/__pycache__/**",

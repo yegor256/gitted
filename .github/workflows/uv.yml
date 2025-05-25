@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: rake
+name: uv
 'on':
   push:
     branches:
@@ -11,18 +11,22 @@ name: rake
     branches:
       - master
 jobs:
-  rake:
+  uv:
     strategy:
       matrix:
         os: [ubuntu-24.04, macos-15, windows-2022]
-        ruby: [3.3]
+        python-version: ['3.8', '3.12']
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - uses: ruby/setup-ruby@v1
+      - uses: astral-sh/setup-uv@v4
         with:
-          ruby-version: ${{ matrix.ruby }}
-          bundler-cache: true
-      - run: bundle config set --global path "$(pwd)/vendor/bundle"
-      - run: bundle install --no-color
-      - run: bundle exec rake
+          enable-cache: true
+          cache-dependency-glob: "pyproject.toml"
+      - run: uv python install ${{ matrix.python-version }}
+      - run: uv sync --all-extras --dev
+      - run: uv run pytest tests/ -v --cov=src/gitted --cov-report=term-missing
+      - run: uv build
+      - run: |
+          uv pip install dist/*.whl
+          uv run python -c "import gitted; print('Package imported successfully')"
