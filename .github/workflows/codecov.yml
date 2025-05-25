@@ -13,13 +13,17 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - uses: ruby/setup-ruby@v1
+      - uses: astral-sh/setup-uv@v4
         with:
-          ruby-version: 3.3
-          bundler-cache: true
-      - run: bundle config set --global path "$(pwd)/vendor/bundle"
-      - run: bundle install --no-color
-      - run: bundle exec rake
+          enable-cache: true
+          cache-dependency-glob: "pyproject.toml"
+      - run: uv python install 3.12
+      - run: uv sync --all-extras --dev
+      - run: uv run pytest tests/ -v --cov=src/gitted --cov-report=xml --cov-report=term
       - uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: true

@@ -16,7 +16,7 @@ Then, run one of these commands:
 
 Install `uv` and then run:
 
-```
+```bash
 uv build
 ```
 
