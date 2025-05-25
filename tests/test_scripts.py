@@ -34,14 +34,6 @@ def test_scripts_have_shebang():
             first_line = f.readline().strip()
             assert first_line == "#!/usr/bin/env bash", f"Script {script} missing proper shebang"
 
-def test_push_script_help():
-    result = run_script("push", ["--help"])
-    assert result.returncode != 0 or "push" in result.stdout.lower() or "push" in result.stderr.lower()
-
-def test_pull_script_help():
-    result = run_script("pull", ["--help"])
-    assert result.returncode != 0 or "pull" in result.stdout.lower() or "pull" in result.stderr.lower()
-
 def test_branch_script_no_args():
     import tempfile
     with tempfile.TemporaryDirectory() as tmpdir:

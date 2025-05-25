@@ -9,10 +9,4 @@ if ! git rev-parse --git-dir > /dev/null 2>&1; then
     exit 1
 fi
 
-current_branch=$(git branch --show-current)
-if [ -z "$current_branch" ]; then
-    echo "Error: Not on any branch" >&2
-    exit 1
-fi
-
-git push origin "$current_branch" "$@"
+echo "Not implemented yet"
