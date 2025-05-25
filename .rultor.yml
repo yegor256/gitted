@@ -3,26 +3,26 @@
 ---
 # yamllint disable rule:line-length
 docker:
-  image: yegor256/ruby
+  image: yegor256/python
 assets:
-  rubygems.yml: yegor256/home#assets/rubygems.yml
+  twine_token: yegor256/home#assets/twine_token
 install: |
   pdd -f /dev/null
-  bundle install --no-color
+  pip install uv
 release:
   pre: false
   script: |-
     [[ "${tag}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit -1
-    bundle exec rake
-    rm -rf *.gem
-    sed -i "s/0\.0\.0/${tag}/g" ellipsized.gemspec
-    git add ellipsized.gemspec
-    sed -i "s/0\.0\.0/${tag}/g" lib/ellipsized.rb
-    git add lib/ellipsized.rb
+    uv run pytest
+    sed -i "s/0\.0\.0/${tag}/g" myproject.toml
+    git add myproject.toml
+    sed -i "s/0\.0\.0/${tag}/g" src/gitted/__init__.py
+    git add src/gitted/__init__.py
+    uv build
     git commit -m "version set to ${tag}"
-    gem build ellipsized.gemspec
-    chmod 0600 ../rubygems.yml
-    gem push *.gem --config-file ../rubygems.yml
+    python3 -m pip install twine
+    python3 setup.py sdist bdist_wheel
+    python3 -m twine upload dist/* -u __token__ -p $(cat ../twine_token)
 merge:
   script: |-
-    bundle exec rake
+    uv run pytest
