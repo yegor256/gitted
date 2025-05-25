@@ -1,0 +1,28 @@
+# SPDX-FileCopyrightText: Copyright (c) 2025 Yegor Bugayenko
+# SPDX-License-Identifier: MIT
+---
+# yamllint disable rule:line-length
+docker:
+  image: yegor256/ruby
+assets:
+  rubygems.yml: yegor256/home#assets/rubygems.yml
+install: |
+  pdd -f /dev/null
+  bundle install --no-color
+release:
+  pre: false
+  script: |-
+    [[ "${tag}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit -1
+    bundle exec rake
+    rm -rf *.gem
+    sed -i "s/0\.0\.0/${tag}/g" ellipsized.gemspec
+    git add ellipsized.gemspec
+    sed -i "s/0\.0\.0/${tag}/g" lib/ellipsized.rb
+    git add lib/ellipsized.rb
+    git commit -m "version set to ${tag}"
+    gem build ellipsized.gemspec
+    chmod 0600 ../rubygems.yml
+    gem push *.gem --config-file ../rubygems.yml
+merge:
+  script: |-
+    bundle exec rake

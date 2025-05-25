@@ -1,0 +1,13 @@
+.bundle/
+.DS_Store
+.idea/
+.yardoc/
+*.gem
+.ruby-*
+coverage/
+doc/
+node_modules/
+rdoc/
+temp/
+vendor/
+.claude/
