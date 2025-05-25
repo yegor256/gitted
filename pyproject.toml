@@ -1,0 +1,32 @@
+# SPDX-FileCopyrightText: Copyright (c) 2025 Yegor Bugayenko
+# SPDX-License-Identifier: MIT
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gitted"
+version = "0.0.0"
+description = "Collection of git helper bash scripts"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "Yegor Bugayenko", email = "yegor256@gmail.com"},
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+gitted = ["scripts/*"]
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
