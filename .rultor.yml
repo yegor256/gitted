@@ -20,9 +20,7 @@ release:
     git add src/gitted/__init__.py
     uv build
     git commit -m "version set to ${tag}"
-    python3 -m pip install twine
-    python3 setup.py sdist bdist_wheel
-    python3 -m twine upload dist/* -u __token__ -p $(cat ../twine_token)
+    uv run python -m twine upload dist/* -u __token__ -p $(cat ../twine_token)
 merge:
   script: |-
     uv run pytest
