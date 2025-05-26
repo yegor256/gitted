@@ -5,17 +5,17 @@
 set -e -o pipefail
 
 if [ -z "${GIT_BIN}" ]; then
-  GIT_BIN=git
+    GIT_BIN=git
 fi
 
 if [ -z "${OPENAI_BIN}" ]; then
-  OPENAI_BIN=openai
+    OPENAI_BIN=openai
 fi
 
 if git rev-parse HEAD >/dev/null 2>&1; then
-   diff=$("${GIT_BIN}" diff HEAD | head -2000)
+    diff=$("${GIT_BIN}" diff HEAD | head -2000)
 else
-  diff=$("${GIT_BIN}" diff | head -2000)
+    diff=$("${GIT_BIN}" diff | head -2000)
 fi
 
 prompt="
@@ -30,7 +30,7 @@ ${diff}
 "
 
 if [ -n "${msg}" ]; then
-  prompt="${prompt}
+    prompt="${prompt}
 
 By the way, this is the commit message provided by the programmer: \"${msg}\".
 You can use this text as the source of inspiration."

@@ -6,6 +6,7 @@ import os
 import sys
 from pathlib import Path
 
+
 def script_path(name):
     return Path(__file__).parent.parent / "scripts" / name
 
