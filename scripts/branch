@@ -8,4 +8,16 @@ base=$(realpath "$(dirname "$0")/..")
 
 "${base}/fn/fail-if-not-git.sh"
 
-echo "Not implemented yet"
+name=$1
+
+git checkout master
+
+git pull
+
+git status
+
+git checkout -b "${name}"
+
+git push origin "${name}"
+
+git branch "--set-upstream-to=origin/${name}" "${name}"
