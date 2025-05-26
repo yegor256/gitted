@@ -12,7 +12,7 @@ if [ -z "${OPENAI_BIN}" ]; then
   OPENAI_BIN=openai
 fi
 
-if git rev-parse HEAD; then
+if git rev-parse HEAD >/dev/null 2>&1; then
    diff=$("${GIT_BIN}" diff HEAD | head -2000)
 else
   diff=$("${GIT_BIN}" diff | head -2000)
