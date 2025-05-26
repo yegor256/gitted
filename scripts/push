@@ -2,14 +2,18 @@
 # SPDX-FileCopyrightText: Copyright (c) 2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
-set -e -o pipefail
+set -ex -o pipefail
 
-base=$(realpath "$(dirname "$0")/..")
+base=$(dirname "$0")
 
-"${base}/fn/fail-if-not-git.sh"
+if [ -z "${GIT_BIN}" ]; then
+  GIT_BIN=git
+fi
+
+"${base}/fail-if-not-git.sh"
 
 # Show status, to make the changes visible:
-git status
+"${GIT_BIN}" status
 
 # Add all files:
 git add .
@@ -27,12 +31,12 @@ else
   prefix="#${branch}: "
 fi
 
-msg="${prefix}$("${base}/fn/ask-chatgpt-for-commit-message.sh")"
+msg="${prefix}$("${base}/diff-to-message-via-chatgpt.sh")"
 
-printf "\e[38;5;208m%s\e[0m\n" "${msg}"
+printf "ChatGPT suggested commit message: \e[38;5;208m%s\e[0m\n" "${msg}"
 
-git commit -S --allow-empty -am "${msg}"
+"${GIT_BIN}" commit -S --allow-empty --all --message "${msg}"
 
 while true; do
-  git push origin "${branch}" && break
+  "${GIT_BIN}" push origin "${branch}" && break
 done

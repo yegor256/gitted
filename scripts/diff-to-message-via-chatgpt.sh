@@ -4,7 +4,19 @@
 
 set -e -o pipefail
 
-diff=$(git diff HEAD | head -2000)
+if [ -z "${GIT_BIN}" ]; then
+  GIT_BIN=git
+fi
+
+if [ -z "${OPENAI_BIN}" ]; then
+  OPENAI_BIN=openai
+fi
+
+if git rev-parse HEAD; then
+   diff=$("${GIT_BIN}" diff HEAD | head -2000)
+else
+  diff=$("${GIT_BIN}" diff | head -2000)
+fi
 
 prompt="
 You are a programmer who cares about the quality of commit messages in his repository.
@@ -32,4 +44,4 @@ Just return one-sentence commit message, without quotation marks around.
 Try to make it as short as possible, ideally under 80 characters.
 Don't even finish it with a dot, just give me a single sentence."
 
-echo "${prompt}" | openai complete - | head -1
+echo "${prompt}" | "${OPENAI_BIN}" complete - | head -1

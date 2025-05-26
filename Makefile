@@ -6,18 +6,16 @@
 .SHELLFLAGS := -e -o pipefail -c
 
 TESTS = $(subst tests.sh/,,$(wildcard tests.sh/*.sh))
-RESULTS = $(addprefix target/,$(addsuffix .rt,$(TESTS)))
+RESULTS = $(addprefix target/logs/,$(addsuffix .txt,$(TESTS)))
+SCRIPTS = $(wildcard scripts/*)
 
 all: test
 
 test: $(RESULTS)
 
-target/%.rt: tests.sh/% | target
-	bash -c "$<"
-	echo "$?" > "$@"
-
-target:
-	mkdir -p "$@"
+.SILENT:
+target/logs/%.txt: tests.sh/% $(SCRIPTS)
+	./makes/one-test.sh "$<" "$@"
 
 clean:
 	rm -rf target
