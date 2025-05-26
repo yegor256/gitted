@@ -15,33 +15,49 @@ pip install gitted
 ```
 
 Then, in order to make a contribution to a GitHub repo, assuming
-you've a made a fork already and cloned it:
+you've a made a fork already and cloned it (in the command line):
+
+1. Start a branch, to resolve issue no. 42 (for example):
 
 ```bash
-# Start a branch, to resolve issue #42:
 branch 42
-# Write some code and then add+commit+push it:
+```
+
+2. Write some code and then add+commit+push it:
+
+```bash
 push
-# Pull recent changes from the main branch:
+```
+
+3. Pull recent changes from the `master` of the uplink:
+
+```bash
 pull
-# Finish working with the branch and get back to the main:
+```
+
+4. Finish working with the branch and get back to the `master`:
+
+```bash
 finish
 ```
 
 Don't forget to define `OPENAI_API_KEY` environment variable with the
 [OpenAI key].
+Also, don't forget to authenticate with `gh auth`.
 
 ## How to Contribute
 
-Install `uv` and then run:
+Install [GNU make] and [uv]. Then, run:
 
 ```bash
-uv build
+make
 ```
 
 Should build.
 If it doesn't, submit a bug report.
 
+[GNU make]: https://www.gnu.org/software/make/
+[uv]: https://github.com/astral-sh/uv
 [Python3]: https://www.python.org/
 [Git]: https://git-scm.com/
 [pip]: mhttps://pypi.org/project/pip/

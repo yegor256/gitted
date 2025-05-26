@@ -18,8 +18,8 @@ release:
     git add pyproject.toml
     sed -i "s/0\.0\.0/${tag}/g" src/gitted/__init__.py
     git add src/gitted/__init__.py
-    uv build
     git commit -m "version set to ${tag}"
+    uv build
     uv run python -m twine upload dist/* -u __token__ -p $(cat ../twine_token)
 merge:
   script: |-
