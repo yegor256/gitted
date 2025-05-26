@@ -60,7 +60,7 @@ If it doesn't, submit a bug report.
 [uv]: https://github.com/astral-sh/uv
 [Python3]: https://www.python.org/
 [Git]: https://git-scm.com/
-[pip]: mhttps://pypi.org/project/pip/
+[pip]: https://pypi.org/project/pip/
 [gh]: https://github.com/cli/cli#installation
 [Bash]: https://www.gnu.org/software/bash/
 [OpenAI key]: https://platform.openai.com/api-keys
