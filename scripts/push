@@ -4,9 +4,35 @@
 
 set -e -o pipefail
 
-if ! git rev-parse --git-dir > /dev/null 2>&1; then
-    echo "Oops, this is not a Git repository"
-    exit 1
+base=$(realpath "$(dirname "$0")/..")
+
+"${base}/fn/fail-if-not-git.sh"
+
+# Show status, to make the changes visible:
+git status
+
+# Add all files:
+git add .
+
+branch=$(git symbolic-ref HEAD --short)
+msg="$*"
+if [ "${branch}" == master ]; then
+  if [[ "${msg}" =~ [0-9]+ ]]; then
+    prefix="#${msg}: "
+    msg=
+  else
+    prefix=
+  fi
+else
+  prefix="#${branch}: "
 fi
 
-echo "Not implemented yet"
+msg="${prefix}$("${base}/fn/ask-chatgpt-for-commit-message.sh")"
+
+printf "\e[38;5;208m%s\e[0m\n" "${msg}"
+
+git commit -S --allow-empty -am "${msg}"
+
+while true; do
+  git push origin "${branch}" && break
+done

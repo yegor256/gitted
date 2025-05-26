@@ -4,9 +4,20 @@
 
 set -e -o pipefail
 
-if ! git rev-parse --git-dir > /dev/null 2>&1; then
-    echo "Oops, this is not a Git repository"
-    exit 1
+base=$(realpath "$(dirname "$0")/..")
+
+"${base}/fn/fail-if-not-git.sh"
+
+if [ -e .git/modules ]; then
+  while true; do
+    git submodule update --remote && break
+  done
 fi
 
-echo "Not implemented yet"
+trap 'git stash apply' EXIT
+git stash
+while true; do
+  git pull && break
+done
+trap - EXIT
+git stash apply

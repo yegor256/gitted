@@ -1,0 +1,14 @@
+# SPDX-FileCopyrightText: Copyright (c) 2025 Yegor Bugayenko
+# SPDX-License-Identifier: MIT
+
+include LICENSE.txt
+include README.md
+include pyproject.toml
+include setup.py
+recursive-include src *
+recursive-include scripts *
+prune tests
+prune **/__pycache__
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude .DS_Store

@@ -4,8 +4,7 @@
 
 set -e -o pipefail
 
-base=$(realpath "$(dirname "$0")/..")
-
-"${base}/fn/fail-if-not-git.sh"
-
-echo "Not implemented yet"
+if ! git rev-parse --git-dir > /dev/null 2>&1; then
+    echo "Oops, this is not a Git repository"
+    exit 1
+fi
