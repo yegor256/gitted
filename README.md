@@ -27,19 +27,19 @@ you've a made a fork already and cloned it (in the command line):
 branch 42
 ```
 
-2. Write some code and then add+commit+push it:
+1. Write some code and then add+commit+push it:
 
 ```bash
 push
 ```
 
-3. Pull recent changes from the `master` of the uplink:
+1. Pull recent changes from the `master` of the uplink:
 
 ```bash
 pull
 ```
 
-4. Finish working with the branch and get back to the `master`:
+1. Finish working with the branch and get back to the `master`:
 
 ```bash
 finish

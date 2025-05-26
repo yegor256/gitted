@@ -19,5 +19,5 @@ jobs:
           python-version: 3.11
       - run: pip install bashate
       - run: |
-          readarray -t files < <(find . -name '*.sh')
-          bashate -i E006,E003 "${files[@]}"
+          readarray -t files < <(find . -name '*.sh' -type f)
+          bashate -i E006 "${files[@]}"
