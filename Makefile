@@ -3,6 +3,7 @@
 
 .ONESHELL:
 .PHONY: clean test all
+SHELL := /bin/bash
 .SHELLFLAGS := -e -o pipefail -c
 
 TESTS = $(subst tests.sh/,,$(wildcard tests.sh/*.sh))
