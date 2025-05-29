@@ -14,7 +14,7 @@ rm -rf there
 git init there --initial-branch=foo
 
 rm -rf here
-git init here
+git init here --initial-branch=master
 cd here || exit 1
 touch hello.txt
 git remote add origin "file://${tmp}/there"

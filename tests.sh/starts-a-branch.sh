@@ -8,7 +8,7 @@ tmp=$(pwd)
 base=$(realpath "$(dirname "$0")/..")
 
 rm -rf there
-git init there
+git init there --initial-branch=master
 cd there || exit 1
 touch hello.txt
 git add hello.txt
