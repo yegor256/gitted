@@ -1,8 +1,6 @@
 # SPDX-FileCopyrightText: Copyright (c) 2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
----
-# yamllint disable rule:line-length
-name: copyrights
+name: bashate
 'on':
   push:
     branches:
@@ -11,9 +9,15 @@ name: copyrights
     branches:
       - master
 jobs:
-  copyrights:
+  bashate:
     timeout-minutes: 15
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - uses: yegor256/copyrights-action@0.0.12
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
+      - run: pip install bashate
+      - run: |
+          readarray -t files < <(find . -name '*.sh' -type f)
+          bashate -i E006 "${files[@]}"

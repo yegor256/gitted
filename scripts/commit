@@ -1,0 +1,46 @@
+#!/bin/bash
+# SPDX-FileCopyrightText: Copyright (c) 2025 Yegor Bugayenko
+# SPDX-License-Identifier: MIT
+
+set -e -o pipefail
+
+base=$(dirname "$0")
+
+if [ -z "${GIT_BIN}" ]; then
+  GIT_BIN=git
+fi
+
+"${base}/fail-if-not-git.sh"
+
+# Show status, to make the changes visible:
+"${GIT_BIN}" status
+
+# Add all files:
+git add .
+
+# Generate commit message:
+branch=$(git symbolic-ref HEAD --short)
+msg="$*"
+if [ "${branch}" == master ]; then
+  if [[ "${msg}" =~ [0-9]+ ]]; then
+    prefix="#${msg}: "
+    msg=
+  else
+    prefix=
+  fi
+else
+  prefix="#${branch}: "
+fi
+msg="${prefix}$("${base}/diff-to-message-via-chatgpt.sh")"
+printf "ChatGPT suggested commit message: \e[38;5;208m%s\e[0m\n" "${msg}"
+
+# Commit the changes:
+opts=(--allow-empty --all)
+if [ -n "${GITTED_TESTING}" ]; then
+  opts+=(--no-verify)
+fi
+email=$(git config user.email)
+if gpg --list-secret-keys --with-colons "${email}" | grep -q '^sec'; then
+  opts+=(-S)
+fi
+"${GIT_BIN}" commit "${opts[@]}" --message "${msg}"

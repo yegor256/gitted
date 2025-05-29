@@ -27,12 +27,18 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
 ]
+dependencies = [
+    "openai>=1.82.0",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
 gitted = ["scripts/*"]
+
+[tool.setuptools]
+include-package-data = false
 
 [tool.uv]
 dev-dependencies = [

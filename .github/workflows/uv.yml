@@ -12,6 +12,7 @@ name: uv
       - master
 jobs:
   uv:
+    timeout-minutes: 15
     strategy:
       matrix:
         os: [ubuntu-24.04, macos-15, windows-2022]

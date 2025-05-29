@@ -21,6 +21,8 @@ release:
     git commit -m "version set to ${tag}"
     uv build
     uv run python -m twine upload dist/* -u __token__ -p $(cat ../twine_token)
+    make
 merge:
   script: |-
     uv run pytest
+    make

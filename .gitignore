@@ -1,48 +1,39 @@
-# Python
-__pycache__/
-*.py[cod]
 *$py.class
+*.egg
+*.egg-info/
+*.py[cod]
 *.so
+*.swo
+*.swp
+*~
+.claude/
+.coverage
+.DS_Store
+.eggs/
+.idea/
+.installed.cfg
+.nox/
+.pytest_cache/
 .Python
+.tox/
+.uv/
+.venv
+.vscode/
+__pycache__/
 build/
 develop-eggs/
 dist/
 downloads/
 eggs/
-.eggs/
+ENV/
+env/
+htmlcov/
 lib/
 lib64/
 parts/
 sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# Testing
-.pytest_cache/
-.coverage
-htmlcov/
-.tox/
-.nox/
-
-# Virtual environments
-venv/
-ENV/
-env/
-.venv
-
-# IDEs
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# OS
-.DS_Store
+target/
 Thumbs.db
-
-# uv
-.uv/
+var/
+venv/
+wheels/

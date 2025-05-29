@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: copyrights
-'on':
+name: pylint
+"on":
   push:
     branches:
       - master
@@ -11,9 +11,14 @@ name: copyrights
     branches:
       - master
 jobs:
-  copyrights:
+  pylint:
     timeout-minutes: 15
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - uses: yegor256/copyrights-action@0.0.12
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
+      - run: |
+          pip install pylint
+          pylint --load-plugins=custom_checkers -d all -e C0411 .

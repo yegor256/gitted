@@ -1,12 +1,37 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # SPDX-FileCopyrightText: Copyright (c) 2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
 set -e -o pipefail
 
-if ! git rev-parse --git-dir > /dev/null 2>&1; then
-    echo "Oops, this is not a Git repository"
+base=$(dirname "$0")
+
+if [ -z "${GIT_BIN}" ]; then
+  GIT_BIN=git
+fi
+
+"${base}/fail-if-not-git.sh"
+
+name=$1
+if [ -z "${name}" ]; then
+    echo "Use it like this: 'branch 42'"
+    echo "Here, '42' is the name of the branch and GitHub issue number"
     exit 1
 fi
 
-echo "Not implemented yet"
+"${GIT_BIN}" checkout master
+
+"${base}/pull"
+
+"${GIT_BIN}" status
+
+"${GIT_BIN}" checkout -b "${name}"
+
+while true; do
+  "${GIT_BIN}" push origin "${name}" && break
+  if [ -n "${GITTED_TESTING}" ]; then
+    exit 1
+  fi
+done
+
+"${GIT_BIN}" branch "--set-upstream-to=origin/${name}" "${name}"
