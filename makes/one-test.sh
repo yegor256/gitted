@@ -2,12 +2,13 @@
 # SPDX-FileCopyrightText: Copyright (c) 2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
-set -ex -o pipefail
+set -e -o pipefail
 
 base=$(realpath "$(dirname "$0")/..")
 
 sh=$(realpath "$1")
 mkdir -p "$(dirname "$2")"
+touch "$2"
 log=$(realpath "$2")
 
 test=$(basename "${sh}")
