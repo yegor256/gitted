@@ -10,14 +10,12 @@ base=$(realpath "$(dirname "$0")/..")
 echo "echo \"fake-message44\"" > openai.sh
 chmod a+x openai.sh
 
-rm -rf there
-git init there --initial-branch=foo
-
 rm -rf here
 git init here
 cd here || exit 1
 touch hello.txt
-git remote add origin "file://${tmp}/there"
+git config user.email "jeff@zerocracy.com"
+git config user.name "Jeff Lebowski"
 
 env "GITTED_TESTING=true" \
     "OPENAI_BIN=${tmp}/openai.sh" \
