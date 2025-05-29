@@ -13,7 +13,6 @@ log=$(realpath "$2")
 test=$(basename "${sh}")
 tmp=${base}/target/tmp/${test}
 
-mkdir -p "$(dirname "${log}")"
 mkdir -p "${tmp}"
 
 printf "Running \e[1m%s\e[0m ... " "${test}"
