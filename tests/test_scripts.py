@@ -35,7 +35,7 @@ def test_scripts_have_shebang():
         path = script_path(script)
         with open(path, 'r') as f:
             first_line = f.readline().strip()
-            assert first_line == "#!/usr/bin/env bash", f"Script {script} missing proper shebang"
+            assert first_line == "#!/bin/bash", f"Script {script} missing proper shebang"
 
 
 def test_branch_script_no_args():
