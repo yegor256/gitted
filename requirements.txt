@@ -1,1 +1,2 @@
-openai>=1.82.0
+openai-cli>=1.0.1
+setuptools>=80.7.1

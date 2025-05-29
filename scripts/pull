@@ -2,25 +2,46 @@
 # SPDX-FileCopyrightText: Copyright (c) 2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
-set -e -o pipefail
+set -ex -o pipefail
 
-base=$(realpath "$(dirname "$0")/..")
+base=$(dirname "$0")
 
-"${base}/fn/fail-if-not-git.sh"
+if [ -z "${GIT_BIN}" ]; then
+  GIT_BIN=git
+fi
+
+"${base}/fail-if-not-git.sh"
+
+branch=$("${GIT_BIN}" symbolic-ref HEAD --short)
+
+if ! "${GIT_BIN}" rev-parse --abbrev-ref --symbolic-full-name '@{u}' >/dev/null 2>&1; then
+  echo "The upstream is not configured for the '${branch}' branch, setting it to 'origin/${branch}'"
+  "${GIT_BIN}" fetch
+  "${GIT_BIN}" branch "--set-upstream-to=origin/${branch}" "${branch}"
+fi
 
 if [ -e .git/modules ]; then
+  echo "A few submodules need to be pulled first..."
   while true; do
-    git submodule update --remote && break
+    "${GIT_BIN}" submodule update --remote && break
     if [ -n "${GITTED_TESTING}" ]; then
       exit 1
     fi
   done
 fi
 
-trap 'git stash apply' EXIT
-git stash
+trap "echo 'Applying the changes back...' && \${GIT_BIN} stash apply" EXIT
+echo "Staging local changes..."
+"${GIT_BIN}" add .
+echo "Stashing local changes..."
+"${GIT_BIN}" stash
 while true; do
-  git pull && break
+  echo "Pulling..."
+  "${GIT_BIN}" pull && break
+  if [ -n "${GITTED_TESTING}" ]; then
+    exit 1
+  fi
 done
 trap - EXIT
-git stash apply
+echo "Trying to apply the changes back..."
+"${GIT_BIN}" stash apply
