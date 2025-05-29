@@ -7,7 +7,7 @@ set -ex -o pipefail
 tmp=$(pwd)
 base=$(realpath "$(dirname "$0")/..")
 
-echo "echo \"fake-commit-message\"" > openai.sh
+echo "echo \"fake-message44\"" > openai.sh
 chmod a+x openai.sh
 
 rm -rf there
@@ -21,14 +21,9 @@ git remote add origin "file://${tmp}/there"
 
 env "GITTED_TESTING=true" \
     "OPENAI_BIN=${tmp}/openai.sh" \
-    "${base}/scripts/push" 2>&1 | tee "${tmp}/log.txt"
+    "${base}/scripts/commit" 2>&1 | tee "${tmp}/log.txt"
 cd .. || exit 1
 
 cd here || exit 1
-git log | grep 'fake-commit-message'
-cd .. || exit 1
-
-cd there || exit 1
-git checkout master
-git log | grep 'fake-commit-message'
+git log | grep 'fake-message44'
 cd .. || exit 1

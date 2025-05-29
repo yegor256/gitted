@@ -11,6 +11,9 @@ base=$(realpath "$(dirname "$0")/..")
 if [ -e .git/modules ]; then
   while true; do
     git submodule update --remote && break
+    if [ -n "${GITTED_TESTING}" ]; then
+      exit 1
+    fi
   done
 fi
 

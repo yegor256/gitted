@@ -14,7 +14,7 @@ all: test
 test: $(RESULTS)
 
 .SILENT:
-target/logs/%.txt: tests.sh/% $(SCRIPTS)
+target/logs/%.txt: tests.sh/% $(SCRIPTS) makes/one-test.sh
 	./makes/one-test.sh "$<" "$@"
 
 clean:

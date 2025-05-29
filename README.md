@@ -27,6 +27,12 @@ you've a made a fork already and cloned it (in the command line):
 branch 42
 ```
 
+1. Write some code and then add+commit it (no push):
+
+```bash
+commit
+```
+
 1. Write some code and then add+commit+push it:
 
 ```bash
