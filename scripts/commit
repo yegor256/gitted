@@ -35,8 +35,12 @@ msg="${prefix}$("${base}/diff-to-message-via-chatgpt.sh")"
 printf "ChatGPT suggested commit message: \e[38;5;208m%s\e[0m\n" "${msg}"
 
 # Commit the changes:
-opts=(-S --allow-empty --all)
+opts=(--allow-empty --all)
 if [ -n "${GITTED_TESTING}" ]; then
   opts+=(--no-verify)
+fi
+email=$(git config user.email)
+if gpg --list-secret-keys --with-colons "${email}" | grep -q '^sec'; then
+  opts+=(-S)
 fi
 "${GIT_BIN}" commit "${opts[@]}" --message "${msg}"
