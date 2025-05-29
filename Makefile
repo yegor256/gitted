@@ -10,7 +10,10 @@ TESTS = $(subst tests.sh/,,$(wildcard tests.sh/*.sh))
 RESULTS = $(addprefix target/logs/,$(addsuffix .txt,$(TESTS)))
 SCRIPTS = $(wildcard scripts/*)
 
-all: test
+all: pytest test
+
+pytest:
+	uv run pytest
 
 test: $(RESULTS)
 

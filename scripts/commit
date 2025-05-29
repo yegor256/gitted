@@ -4,13 +4,16 @@
 
 set -e -o pipefail
 
+if ! git rev-parse --git-dir > /dev/null 2>&1; then
+    echo "Oops, this is not a Git repository"
+    exit 1
+fi
+
 base=$(dirname "$0")
 
 if [ -z "${GIT_BIN}" ]; then
   GIT_BIN=git
 fi
-
-"${base}/fail-if-not-git.sh"
 
 # Show status, to make the changes visible:
 "${GIT_BIN}" status
@@ -31,7 +34,7 @@ if [ "${branch}" == master ]; then
 else
   prefix="#${branch}: "
 fi
-msg="${prefix}$("${base}/diff-to-message-via-chatgpt.sh")"
+msg="${prefix}$("${base}/diff2msg")"
 printf "ChatGPT suggested commit message: \e[38;5;208m%s\e[0m\n" "${msg}"
 
 # Commit the changes:

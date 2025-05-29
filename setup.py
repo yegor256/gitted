@@ -7,8 +7,10 @@ setup(
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     scripts=[
-        "scripts/push",
-        "scripts/pull",
         "scripts/branch",
+        "scripts/commit",
+        "scripts/diff2msg",
+        "scripts/pull",
+        "scripts/push"
     ],
 )

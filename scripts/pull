@@ -4,13 +4,14 @@
 
 set -ex -o pipefail
 
-base=$(dirname "$0")
+if ! git rev-parse --git-dir > /dev/null 2>&1; then
+    echo "Oops, this is not a Git repository"
+    exit 1
+fi
 
 if [ -z "${GIT_BIN}" ]; then
   GIT_BIN=git
 fi
-
-"${base}/fail-if-not-git.sh"
 
 branch=$("${GIT_BIN}" symbolic-ref HEAD --short)
 
