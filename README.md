@@ -45,12 +45,6 @@ push
 pull
 ```
 
-1. Finish working with the branch and get back to the `master`:
-
-```bash
-finish
-```
-
 Don't forget to define `OPENAI_API_KEY` environment variable with the
 [OpenAI key].
 Also, don't forget to authenticate with `gh auth`.

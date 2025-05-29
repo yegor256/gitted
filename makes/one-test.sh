@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: Copyright (c) 2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
-set -e -o pipefail
+set -ex -o pipefail
 
 base=$(realpath "$(dirname "$0")/..")
 
