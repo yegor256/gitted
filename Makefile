@@ -31,7 +31,9 @@ test: $(RESULTS) $(PYS)
 
 .SILENT:
 target/logs/%.txt: tests.sh/% $(SCRIPTS) makes/one-test.sh
-	./makes/one-test.sh "$<" "$@"
+	./makes/one-test.sh "$<" "target/log.txt"
+	mkdir -p "$$(dirname "$@")"
+	cp target/log.txt "$@"
 
 clean:
 	rm -rf target

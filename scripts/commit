@@ -8,6 +8,10 @@ if [ -n "${GITTED_TESTING}" ]; then
     set -x
 fi
 
+if [ -n "${GITTED_VERBOSE}" ]; then
+    set -x
+fi
+
 if ! git rev-parse --git-dir > /dev/null 2>&1; then
     echo "Oops, this is not a Git repository"
     exit 1
@@ -16,7 +20,7 @@ fi
 base=$(dirname "$0")
 
 if [ -z "${GIT_BIN}" ]; then
-  GIT_BIN=git
+    GIT_BIN=git
 fi
 
 # Show status, to make the changes visible:
@@ -29,14 +33,14 @@ git add .
 branch=$(git symbolic-ref HEAD --short)
 msg="$*"
 if [ "${branch}" == master ]; then
-  if [[ "${msg}" =~ [0-9]+ ]]; then
-    prefix="#${msg}: "
-    msg=
-  else
-    prefix=
-  fi
+    if [[ "${msg}" =~ [0-9]+ ]]; then
+        prefix="#${msg}: "
+        msg=
+    else
+        prefix=
+    fi
 else
-  prefix="#${branch}: "
+    prefix="#${branch}: "
 fi
 
 if git rev-parse --verify HEAD >/dev/null 2>&1; then
@@ -81,10 +85,10 @@ fi
 # Commit the changes:
 opts=(--allow-empty --all)
 if [ -n "${GITTED_TESTING}" ]; then
-  opts+=(--no-verify)
+    opts+=(--no-verify)
 fi
 email=$(git config user.email)
 if gpg --list-secret-keys --with-colons "${email}" | grep -q '^sec'; then
-  opts+=(-S)
+    opts+=(-S)
 fi
 "${GIT_BIN}" commit "${opts[@]}" --message "${msg}"

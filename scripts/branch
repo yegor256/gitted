@@ -8,6 +8,10 @@ if [ -n "${GITTED_TESTING}" ]; then
     set -x
 fi
 
+if [ -n "${GITTED_VERBOSE}" ]; then
+    set -x
+fi
+
 if ! git rev-parse --git-dir > /dev/null 2>&1; then
     echo "Oops, this is not a Git repository"
     exit 1
@@ -35,10 +39,10 @@ fi
 "${GIT_BIN}" checkout -b "${name}"
 
 while true; do
-  "${GIT_BIN}" push origin "${name}" && break
-  if [ -n "${GITTED_TESTING}" ]; then
-    exit 1
-  fi
+    "${GIT_BIN}" push origin "${name}" && break
+    if [ -n "${GITTED_TESTING}" ]; then
+        exit 1
+    fi
 done
 
 "${GIT_BIN}" branch "--set-upstream-to=origin/${name}" "${name}"

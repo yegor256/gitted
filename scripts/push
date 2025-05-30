@@ -2,9 +2,13 @@
 # SPDX-FileCopyrightText: Copyright (c) 2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
-set -ex -o pipefail
+set -e -o pipefail
 
 if [ -n "${GITTED_TESTING}" ]; then
+    set -x
+fi
+
+if [ -n "${GITTED_VERBOSE}" ]; then
     set -x
 fi
 
@@ -16,7 +20,7 @@ fi
 base=$(dirname "$0")
 
 if [ -z "${GIT_BIN}" ]; then
-  GIT_BIN=git
+    GIT_BIN=git
 fi
 
 "${base}/commit" "$*"
@@ -24,8 +28,8 @@ fi
 branch=$(git symbolic-ref HEAD --short)
 
 while true; do
-  "${GIT_BIN}" push origin "${branch}" && break
-  if [ -n "${GITTED_TESTING}" ]; then
-    exit 1
-  fi
+    "${GIT_BIN}" push origin "${branch}" && break
+    if [ -n "${GITTED_TESTING}" ]; then
+      exit 1
+    fi
 done
