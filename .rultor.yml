@@ -17,10 +17,7 @@ release:
     git add pyproject.toml
     sed -i "s/0\.0\.0/${tag}/g" src/gitted/__init__.py
     git add src/gitted/__init__.py
-    for f in $(find scripts -type f); do
-      sed -i "s/0\.0\.0/${tag}/g" "${f}"
-      git add "${f}"
-    done
+    for f in $(find scripts -type f); do sed -i "s/0\.0\.0/${tag}/g" "${f}"; git add "${f}"; done
     git commit -m "version set to ${tag}"
     pip install --progress-bar=off uv
     GITTED_BATCH=true GITTED_TESTING=true make -e
