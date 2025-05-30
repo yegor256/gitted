@@ -50,3 +50,5 @@ done
 trap - EXIT
 echo "Trying to apply the changes back..."
 "${GIT_BIN}" stash apply
+
+# Then, we should pull+merge from upstream...
