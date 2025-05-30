@@ -38,7 +38,18 @@ if [ "${branch}" == master ]; then
 else
   prefix="#${branch}: "
 fi
-msg="${prefix}$("${base}/diff2msg")"
+
+if git rev-parse --verify HEAD >/dev/null 2>&1; then
+    if git rev-parse HEAD >/dev/null 2>&1; then
+        diff=$("${GIT_BIN}" diff HEAD | head -2000)
+    else
+        diff=$("${GIT_BIN}" diff | head -2000)
+    fi
+else
+    diff=$(git diff --staged)
+fi
+
+msg="${prefix}$(echo "${diff}" | "${base}/diff2msg")"
 if [ -z "${GITTED_BATCH}" ]; then
     printf "ChatGPT suggested: \e[38;5;208m%s\e[0m\n" "${msg}"
 else

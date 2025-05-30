@@ -8,23 +8,11 @@ if [ -n "${GITTED_TESTING}" ]; then
     set -x
 fi
 
-if [ -z "${GIT_BIN}" ]; then
-    GIT_BIN=git
-fi
-
 if [ -z "${OPENAI_BIN}" ]; then
     OPENAI_BIN=openai
 fi
 
-if git rev-parse --verify HEAD >/dev/null 2>&1; then
-    if git rev-parse HEAD >/dev/null 2>&1; then
-        diff=$("${GIT_BIN}" diff HEAD | head -2000)
-    else
-        diff=$("${GIT_BIN}" diff | head -2000)
-    fi
-else
-    diff=$(git diff --staged)
-fi
+diff=$(cat)
 
 if [ -z "${diff}" ]; then
     echo 'No changes'
