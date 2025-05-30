@@ -4,6 +4,10 @@
 
 set -e -o pipefail
 
+if [ -n "${GITTED_TESTING}" ]; then
+    set -x
+fi
+
 if [ -z "${GIT_BIN}" ]; then
     GIT_BIN=git
 fi
