@@ -19,6 +19,7 @@ class TestDiff2Msg:
         result = generate_commit_message('some diff')
         assert result == ''
     def test_openai_call(self, monkeypatch):
+        monkeypatch.delenv('GITTED_TESTING', raising=False)
         class MockMessage:
             def __init__(self):
                 self.content = 'Add new feature'
@@ -53,6 +54,7 @@ index 0000000..1234567
         result = generate_commit_message(diff)
         assert result == 'Add new feature'
     def test_openai_call_with_message(self, monkeypatch):
+        monkeypatch.delenv('GITTED_TESTING', raising=False)
         captured_messages = []
         class MockMessage:
             def __init__(self):
