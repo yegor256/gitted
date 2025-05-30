@@ -8,9 +8,9 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/yegor256/gitted/blob/master/LICENSE.txt)
 
 If all you need to do with Git is make branches, push, and sync,
-  this collection of command-line commands may simplify your workflow.
+this collection of command-line commands may simplify your workflow.
 Well, it simplifies mine, a [hundred](https://github.com/yegor256)
-  times per day.
+times per day.
 
 First, install [Python3], [Git], [pip], [gh], and [Bash].
 
@@ -21,35 +21,36 @@ pip install gitted
 ```
 
 Then, in order to make a contribution to a GitHub repo, assuming
-  you've made a [fork][fork2] already and cloned it (in the command line):
+you've made a [fork][fork2] already and cloned it (in the command line):
 
 First, start a branch to resolve issue no. 42 (for example):
 
-  ```bash
-  branch 42
-  ```
+```bash
+branch 42
+```
 
-Then, write some code and then add+commit it (no push):
+Then, write some code and add+commit it (no push):
 
-  ```bash
-  commit
-  ```
+```bash
+commit 'Just fixed a small bug'
+```
 
 Then, pull recent changes from the `master` of the upstream:
 
-  ```bash
-  pull
-  ```
+```bash
+pull
+```
 
-Finally, write some code and add+commit+push it:
+Finally, write more code and add+commit+push it:
 
-  ```bash
-  push
-  ```
+```bash
+push 'Just fixed a big bug'
+```
 
-Don't forget to define the `OPENAI_API_KEY` environment variable with the
+If you omit the commit message for the `commit` or the `push` command,
+they will use ChatGPT to generate it, looking at the changes you've made.
+To make it work, define the `OPENAI_API_KEY` environment variable with the
 [OpenAI key].
-Also, don't forget to authenticate with `gh auth`.
 
 ## Conventions
 
@@ -60,7 +61,7 @@ In order to work smoothly, you have to respect a few conventions:
 * All commits are GPG-signed ([how?][gpg])
 * The `origin` is the fork, while the `upstream` is the main repo ([why?][fork])
 
-Maybe in future versions we'll make it configurable.
+Maybe in future versions we'll make these configurable.
 However, at the moment, that's what we have.
 
 ## How to Contribute
