@@ -28,10 +28,16 @@ pip install --progress-bar=off uv
 GITTED_BATCH=true GITTED_TESTING=true make -e
 
 while IFS= read -r f; do
-    true
-    # in this file, finds a string that contains "sub-scripts/common.sh"
-    # and replace it (the entire string) with the contents of the
-    # corresponding file in the sub-scripts/ directory: commons.sh
+    temp=$(mktemp)
+    while IFS= read -r line; do
+        if [[ "${line}" =~ commons\.sh ]]; then
+            cat sub-scripts/commons.sh
+        else
+            echo "${line}"
+        fi
+    done < "${f}" > "${temp}"
+    mv "${temp}" "${f}"
+    chmod a+x "${f}"
 done < <(find scripts -type f)
 
 uv --color=never build --no-build-logs
