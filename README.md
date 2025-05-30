@@ -1,4 +1,4 @@
-# Git Autopilot for a Primitive Git Flow
+# Command-Line Shortcuts for a Primitive Git Flow
 
 [![DevOps By Rultor.com](https://www.rultor.com/b/yegor256/gitted)](https://www.rultor.com/p/yegor256/gitted)
 
@@ -7,7 +7,7 @@
 [![Hits-of-Code](https://hitsofcode.com/github/yegor256/gitted)](https://hitsofcode.com/view/github/yegor256/gitted)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/yegor256/gitted/blob/master/LICENSE.txt)
 
-If all you need to do with Git is making branches, pushing, and syncing,
+If all you need to do with Git is make branches, push, and sync,
   this collection of command-line commands may simplify your workflow.
 Well, it simplifies mine, a [hundred](https://github.com/yegor256)
   times per day.
@@ -19,33 +19,33 @@ pip install gitted
 ```
 
 Then, in order to make a contribution to a GitHub repo, assuming
-  you've a made a [fork][fork2] already and cloned it (in the command line):
+  you've made a [fork][fork2] already and cloned it (in the command line):
 
-1. Start a branch, to resolve issue no. 42 (for example):
+First, start a branch to resolve issue no. 42 (for example):
 
   ```bash
   branch 42
   ```
 
-1. Write some code and then add+commit it (no push):
+Then, write some code and then add+commit it (no push):
 
   ```bash
   commit
   ```
 
-1. Write some code and then add+commit+push it:
-
-  ```bash
-  push
-  ```
-
-1. Pull recent changes from the `master` of the upstream:
+Then, pull recent changes from the `master` of the upstream:
 
   ```bash
   pull
   ```
 
-Don't forget to define `OPENAI_API_KEY` environment variable with the
+Finally, write some code and add+commit+push it:
+
+  ```bash
+  push
+  ```
+
+Don't forget to define the `OPENAI_API_KEY` environment variable with the
 [OpenAI key].
 Also, don't forget to authenticate with `gh auth`.
 
@@ -58,7 +58,7 @@ In order to work smoothly, you have to respect a few conventions:
 * All commits are GPG-signed ([how?][gpg])
 * The `origin` is the fork, while the `upstream` is the main repo ([why?][fork])
 
-Maybe in future versions we make it configurable.
+Maybe in future versions we'll make it configurable.
 However, at the moment, that's what we have.
 
 ## How to Contribute
