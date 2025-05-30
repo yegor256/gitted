@@ -20,7 +20,7 @@ fi
 base=$(dirname "$0")
 
 if [ -z "${GIT_BIN}" ]; then
-  GIT_BIN=git
+    GIT_BIN=git
 fi
 
 name=$1

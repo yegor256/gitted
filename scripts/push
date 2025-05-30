@@ -30,6 +30,6 @@ branch=$(git symbolic-ref HEAD --short)
 while true; do
     "${GIT_BIN}" push origin "${branch}" && break
     if [ -n "${GITTED_TESTING}" ]; then
-      exit 1
+        exit 1
     fi
 done
