@@ -7,13 +7,13 @@ set -ex -o pipefail
 tmp=$(pwd)
 base=$(realpath "$(dirname "$0")/..")
 
-echo "echo \"fake-message44\"" > openai.sh
+echo "echo \"fake-message9844\"" > openai.sh
 chmod a+x openai.sh
 
 rm -rf here
 git init here --initial-branch=master
 cd here || exit 1
-touch hello.txt
+echo 'abc' > hello.txt
 git config user.email "jeff@zerocracy.com"
 git config user.name "Jeff Lebowski"
 
@@ -23,5 +23,5 @@ env "GITTED_TESTING=true" \
 cd .. || exit 1
 
 cd here || exit 1
-git log | grep 'fake-message44'
+git log | grep 'fake-message9844'
 cd .. || exit 1

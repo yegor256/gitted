@@ -39,7 +39,11 @@ else
   prefix="#${branch}: "
 fi
 msg="${prefix}$("${base}/diff2msg")"
-printf "ChatGPT suggested commit message: \e[38;5;208m%s\e[0m\n" "${msg}"
+if [ -z "${GITTED_BATCH}" ]; then
+    printf "ChatGPT suggested: \e[38;5;208m%s\e[0m\n" "${msg}"
+else
+    echo "ChatGPT suggested: '${msg}'"
+fi
 
 # Commit the changes:
 opts=(--allow-empty --all)

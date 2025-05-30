@@ -16,10 +16,19 @@ if [ -z "${OPENAI_BIN}" ]; then
     OPENAI_BIN=openai
 fi
 
-if git rev-parse HEAD >/dev/null 2>&1; then
-    diff=$("${GIT_BIN}" diff HEAD | head -2000)
+if git rev-parse --verify HEAD >/dev/null 2>&1; then
+    if git rev-parse HEAD >/dev/null 2>&1; then
+        diff=$("${GIT_BIN}" diff HEAD | head -2000)
+    else
+        diff=$("${GIT_BIN}" diff | head -2000)
+    fi
 else
-    diff=$("${GIT_BIN}" diff | head -2000)
+    diff=$(git diff --staged)
+fi
+
+if [ -z "${diff}" ]; then
+    echo 'No changes'
+    exit
 fi
 
 prompt="
