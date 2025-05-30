@@ -19,7 +19,7 @@ pip install gitted
 ```
 
 Then, in order to make a contribution to a GitHub repo, assuming
-  you've a made a [fork] already and cloned it (in the command line):
+  you've a made a [fork][fork2] already and cloned it (in the command line):
 
 1. Start a branch, to resolve issue no. 42 (for example):
 
@@ -82,4 +82,4 @@ If it doesn't, submit a bug report.
 [OpenAI key]: https://platform.openai.com/api-keys
 [fork]: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/configuring-a-remote-repository-for-a-fork
 [gpg]: https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits
-[fork]: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo
+[fork2]: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo
