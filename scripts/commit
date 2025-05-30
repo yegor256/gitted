@@ -60,11 +60,7 @@ EOT
     )
     gpt=$(echo "${diff}" | python3 -c "${py}" "${msg}")
     msg="${prefix}: ${gpt}"
-    if [ -z "${GITTED_BATCH}" ]; then
-        printf "ChatGPT suggested: \e[38;5;208m%s\e[0m\n" "${msg}"
-    else
-        printf "ChatGPT suggested: '%s'\n" "${msg}"
-    fi
+    printf "ChatGPT suggested: %s\n" "${gpt}"
 else
     echo 'The OPENAI_API_KEY variable is not set'
     if [ -z "${msg}" ]; then
@@ -72,11 +68,11 @@ else
     else
         msg="${prefix}: ${msg}"
     fi
-    if [ -z "${GITTED_BATCH}" ]; then
-        printf "Message: \e[38;5;208m%s\e[0m\n" "${msg}"
-    else
-        printf "Message: %s\n" "${msg}"
-    fi
+fi
+if [ -z "${GITTED_BATCH}" ]; then
+    printf "Message: \e[38;5;208m%s\e[0m\n" "${msg}"
+else
+    printf "Message: %s\n" "${msg}"
 fi
 
 title_it "Committing the changes..."
