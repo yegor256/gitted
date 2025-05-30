@@ -29,7 +29,8 @@ jobs:
           cache-dependency-glob: "pyproject.toml"
       - run: uv --color=never python install ${{ matrix.python-version }}
       - run: uv --color=never sync --all-extras --dev
-      - run: uv --color=never pip install -r requirements.txt
+      - run: uv --color=never
+      - run: pip install -r requirements.txt
       - run: make -e
       - run: uv --color=never build --no-build-logs
       - run: |
