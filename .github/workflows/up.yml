@@ -5,6 +5,8 @@
 name: up
 'on':
   push:
+permissions:
+  contents: write
 jobs:
   up:
     timeout-minutes: 15
