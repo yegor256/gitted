@@ -8,7 +8,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "gitted"
 version = "0.0.0"
-description = "Collection of Git helper Bash scripts"
+description = "Collection of Bash scripts for Git auto-piloting, such as branch, push, pull, and commit."
 readme = "README.md"
 requires-python = ">=3.9"
 license = {text = "MIT"}
