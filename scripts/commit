@@ -36,8 +36,8 @@ fi
 printf "\nShowing status...\n"
 bash_it "${GIT_BIN}" status
 
-inc=$(${GIT_BIN} status --porcelain | grep -c '^??')
-if [ "${inc}" != '0' ]; then
+inc=$(${GIT_BIN} status --porcelain | grep -c '^??' || true)
+if [ ! "${inc}" == '0' ]; then
     title_it "Adding new ${inc} files..."
     bash_it "${GIT_BIN}" add .
 fi

@@ -53,8 +53,11 @@ if [ -e .git/modules ]; then
     done
 fi
 
-title_it "Staging local changes ($(${GIT_BIN} status --porcelain | wc -l) files)"
-bash_it "${GIT_BIN}" add .
+inc=$(${GIT_BIN} status --porcelain | grep -c '^??' || true)
+if [ ! "${inc}" == '0' ]; then
+    title_it "Staging local changes (${inc} files)"
+    bash_it "${GIT_BIN}" add .
+fi
 
 stashed=no
 if ! git diff --quiet || ! git diff --cached --quiet; then
@@ -73,8 +76,11 @@ while true; do
 done
 trap - EXIT
 if [ "${stashed}" == 'yes' ]; then
-    title_it "Trying to apply the changes back"
+    title_it "Applying the changes back"
     bash_it "${GIT_BIN}" stash apply
 fi
 
-# Then, we should pull+merge from upstream...
+if ${GIT_BIN} remote | cut -f1 -d ' ' | grep upstream; then
+    title_it "Pulling from upstream"
+    ${GIT_BIN} pull upstream master
+fi
