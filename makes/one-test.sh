@@ -16,10 +16,19 @@ tmp=${base}/target/tmp/${test}
 
 mkdir -p "${tmp}"
 
-printf "Running \e[1m%s\e[0m ... " "${test}"
+if [ -z "${GITTED_BATCH}" ]; then
+    echo "Running ${test}:"
+else
+    printf "Running \e[1m%s\e[0m ... " "${test}"
+fi
+
 if ! /bin/bash -c "cd \"${tmp}\" && exec \"${sh}\" > \"${log}\" 2>&1"; then
-    printf "\e[38;5;160mFAILED\e[0m\n"
+    if [ -z "${GITTED_BATCH}" ]; then
+        printf "\e[38;5;160mFAILED\e[0m\n"
+    fi
     cat "${log}"
     exit 1
 fi
-printf "👍🏻\n"
+if [ -z "${GITTED_BATCH}" ]; then
+    printf "👍🏻\n"
+fi

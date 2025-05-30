@@ -10,6 +10,8 @@ TESTS = $(subst tests.sh/,,$(wildcard tests.sh/*.sh))
 RESULTS = $(addprefix target/logs/,$(addsuffix .txt,$(TESTS)))
 SCRIPTS = $(wildcard scripts/*)
 
+export
+
 all: pytest test
 
 pytest:
