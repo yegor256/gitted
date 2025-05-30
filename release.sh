@@ -18,10 +18,8 @@ sed -i "s/0\.0\.0/${tag}/g" pyproject.toml
 git add pyproject.toml
 sed -i "s/0\.0\.0/${tag}/g" src/gitted/__init__.py
 git add src/gitted/__init__.py
-while IFS= read -r f; do
-    sed -i "s/0\.0\.0/${tag}/g" "${f}"
-    git add "${f}"
-done < <(find scripts -type f)
+sed -i "s/0\.0\.0/${tag}/g" sub-scripts/commons.sh
+git add sub-scripts/commons.sh
 git commit -m "version set to ${tag}"
 
 pip install --progress-bar=off uv
