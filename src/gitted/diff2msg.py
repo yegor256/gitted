@@ -4,6 +4,7 @@
 import os
 from openai import OpenAI
 
+
 def generate_commit_message(diff, msg=''):
     if not diff.strip():
         return 'No changes'

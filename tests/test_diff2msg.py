@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 
 import os
-from unittest.mock import patch, MagicMock
+import pytest
 from gitted.diff2msg import generate_commit_message
 
 
@@ -12,24 +12,35 @@ class TestDiff2Msg:
         assert result == 'No changes'
         result = generate_commit_message('   ')
         assert result == 'No changes'
-
-
-    def test_testing_mode(self):
-        with patch.dict(os.environ, {'GITTED_TESTING': 'true'}):
-            result = generate_commit_message('some diff', 'test message')
-            assert result == 'test message'
-            result = generate_commit_message('some diff')
-            assert result == ''
-
-
-    @patch('gitted.diff2msg.OpenAI')
-    def test_openai_call(self, mock_openai):
-        mock_response = MagicMock()
-        mock_response.choices = [MagicMock()]
-        mock_response.choices[0].message.content = 'Add new feature'
-        mock_client = MagicMock()
-        mock_client.chat.completions.create.return_value = mock_response
-        mock_openai.return_value = mock_client
+    def test_testing_mode(self, monkeypatch):
+        monkeypatch.setenv('GITTED_TESTING', 'true')
+        result = generate_commit_message('some diff', 'test message')
+        assert result == 'test message'
+        result = generate_commit_message('some diff')
+        assert result == ''
+    def test_openai_call(self, monkeypatch):
+        class MockMessage:
+            def __init__(self):
+                self.content = 'Add new feature'
+        class MockChoice:
+            def __init__(self):
+                self.message = MockMessage()
+        class MockResponse:
+            def __init__(self):
+                self.choices = [MockChoice()]
+        class MockCompletions:
+            def create(self, **kwargs):
+                assert kwargs['model'] == 'gpt-3.5-turbo'
+                assert kwargs['max_tokens'] == 100
+                assert kwargs['temperature'] == 0.7
+                return MockResponse()
+        class MockChat:
+            def __init__(self):
+                self.completions = MockCompletions()
+        class MockClient:
+            def __init__(self):
+                self.chat = MockChat()
+        monkeypatch.setattr('gitted.diff2msg.OpenAI', MockClient)
         diff = """diff --git a/test.py b/test.py
 new file mode 100644
 index 0000000..1234567
@@ -41,21 +52,28 @@ index 0000000..1234567
 +"""
         result = generate_commit_message(diff)
         assert result == 'Add new feature'
-        mock_client.chat.completions.create.assert_called_once()
-        call_args = mock_client.chat.completions.create.call_args
-        assert call_args[1]['model'] == 'gpt-3.5-turbo'
-        assert call_args[1]['max_tokens'] == 100
-        assert call_args[1]['temperature'] == 0.7
-
-
-    @patch('gitted.diff2msg.OpenAI')
-    def test_openai_call_with_message(self, mock_openai):
-        mock_response = MagicMock()
-        mock_response.choices = [MagicMock()]
-        mock_response.choices[0].message.content = 'Fix bug in authentication'
-        mock_client = MagicMock()
-        mock_client.chat.completions.create.return_value = mock_response
-        mock_openai.return_value = mock_client
+    def test_openai_call_with_message(self, monkeypatch):
+        captured_messages = []
+        class MockMessage:
+            def __init__(self):
+                self.content = 'Fix bug in authentication'
+        class MockChoice:
+            def __init__(self):
+                self.message = MockMessage()
+        class MockResponse:
+            def __init__(self):
+                self.choices = [MockChoice()]
+        class MockCompletions:
+            def create(self, **kwargs):
+                captured_messages.append(kwargs['messages'][0]['content'])
+                return MockResponse()
+        class MockChat:
+            def __init__(self):
+                self.completions = MockCompletions()
+        class MockClient:
+            def __init__(self):
+                self.chat = MockChat()
+        monkeypatch.setattr('gitted.diff2msg.OpenAI', MockClient)
         diff = """diff --git a/auth.py b/auth.py
 index 1234567..abcdefg 100644
 --- a/auth.py
@@ -66,6 +84,5 @@ index 1234567..abcdefg 100644
 """
         result = generate_commit_message(diff, 'fix auth')
         assert result == 'Fix bug in authentication'
-        call_args = mock_client.chat.completions.create.call_args
-        messages = call_args[1]['messages'][0]['content']
-        assert 'fix auth' in messages
+        assert len(captured_messages) == 1
+        assert 'fix auth' in captured_messages[0]
