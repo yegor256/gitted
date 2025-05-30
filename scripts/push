@@ -12,6 +12,12 @@ if [ -n "${GITTED_VERBOSE}" ]; then
     set -x
 fi
 
+echo "Gitted 0.0.0 (any issues or ideas, submit to https://github.com/yegor256/gitted)"
+
+function bash_it {
+    /bin/bash -x -c "$*"
+}
+
 if ! git rev-parse --git-dir > /dev/null 2>&1; then
     echo "Oops, this is not a Git repository"
     exit 1
@@ -28,7 +34,7 @@ fi
 branch=$(git symbolic-ref HEAD --short)
 
 while true; do
-    "${GIT_BIN}" push origin "${branch}" && break
+    bash_it "${GIT_BIN}" push origin "${branch}" && break
     if [ -n "${GITTED_TESTING}" ]; then
         exit 1
     fi

@@ -12,6 +12,12 @@ if [ -n "${GITTED_VERBOSE}" ]; then
     set -x
 fi
 
+echo "Gitted 0.0.0 (any issues or ideas, submit to https://github.com/yegor256/gitted)"
+
+function bash_it {
+    printf '%q ' "$@" | /bin/bash -x
+}
+
 if ! git rev-parse --git-dir > /dev/null 2>&1; then
     echo "Oops, this is not a Git repository"
     exit 1
@@ -24,13 +30,13 @@ if [ -z "${GIT_BIN}" ]; then
 fi
 
 # Show status, to make the changes visible:
-"${GIT_BIN}" status
+bash_it "${GIT_BIN}" status
 
 # Add all files:
-git add .
+bash_it "${GIT_BIN}" add .
 
 # Generate commit message:
-branch=$(git symbolic-ref HEAD --short)
+branch=$("${GIT_BIN}" symbolic-ref HEAD --short)
 msg="$*"
 if [ "${branch}" == master ]; then
     if [[ "${msg}" =~ [0-9]+ ]]; then
@@ -43,14 +49,14 @@ else
     prefix="#${branch}: "
 fi
 
-if git rev-parse --verify HEAD >/dev/null 2>&1; then
-    if git rev-parse HEAD >/dev/null 2>&1; then
+if "${GIT_BIN}" rev-parse --verify HEAD >/dev/null 2>&1; then
+    if "${GIT_BIN}" rev-parse HEAD >/dev/null 2>&1; then
         diff=$("${GIT_BIN}" diff HEAD | head -2000)
     else
         diff=$("${GIT_BIN}" diff | head -2000)
     fi
 else
-    diff=$(git diff --staged)
+    diff=$("${GIT_BIN}" diff --staged)
 fi
 
 if [ -n "${GITTED_TESTING}" ]; then
@@ -87,8 +93,8 @@ opts=(--allow-empty --all)
 if [ -n "${GITTED_TESTING}" ]; then
     opts+=(--no-verify)
 fi
-email=$(git config user.email)
-if gpg --list-secret-keys --with-colons "${email}" | grep -q '^sec'; then
+email=$("${GIT_BIN}" config user.email)
+if gpg --list-secret-keys --with-colons "${email}" 2>/dev/null | grep -q '^sec'; then
     opts+=(-S)
 fi
-"${GIT_BIN}" commit "${opts[@]}" --message "${msg}"
+bash_it "${GIT_BIN}" commit "${opts[@]}" --message "${msg}"

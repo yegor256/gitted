@@ -12,6 +12,12 @@ if [ -n "${GITTED_VERBOSE}" ]; then
     set -x
 fi
 
+echo "Gitted 0.0.0 (any issues or ideas, submit to https://github.com/yegor256/gitted)"
+
+function bash_it {
+    /bin/bash -x -c "$*"
+}
+
 if ! git rev-parse --git-dir > /dev/null 2>&1; then
     echo "Oops, this is not a Git repository"
     exit 1
@@ -30,19 +36,19 @@ if [ -z "${name}" ]; then
     exit 1
 fi
 
-"${GIT_BIN}" checkout master
+bash_it "${GIT_BIN}" checkout master
 
 "${base}/pull"
 
-"${GIT_BIN}" status
+bash_it "${GIT_BIN}" status
 
-"${GIT_BIN}" checkout -b "${name}"
+bash_it "${GIT_BIN}" checkout -b "${name}"
 
 while true; do
-    "${GIT_BIN}" push origin "${name}" && break
+    bash_it "${GIT_BIN}" push origin "${name}" && break
     if [ -n "${GITTED_TESTING}" ]; then
         exit 1
     fi
 done
 
-"${GIT_BIN}" branch "--set-upstream-to=origin/${name}" "${name}"
+bash_it "${GIT_BIN}" branch "--set-upstream-to=origin/${name}" "${name}"
