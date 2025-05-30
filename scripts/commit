@@ -2,38 +2,10 @@
 # SPDX-FileCopyrightText: Copyright (c) 2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
-set -e -o pipefail
+# shellcheck disable=SC1091
+. "$(dirname "$0")/../sub-scripts/commons.sh"
 
-if [ -n "${GITTED_TESTING}" ]; then
-    set -x
-fi
-
-if [ -n "${GITTED_VERBOSE}" ]; then
-    set -x
-fi
-
-echo "Gitted 0.0.0 (any issues or ideas, submit to https://github.com/yegor256/gitted)"
-
-function title_it {
-    printf '\n\e[1m%s\e[0m...\n' "$@"
-}
-
-function bash_it {
-    printf '%q ' "$@" | /bin/bash -x
-}
-
-if ! git rev-parse --git-dir > /dev/null 2>&1; then
-    echo "Oops, this is not a Git repository"
-    exit 1
-fi
-
-base=$(dirname "$0")
-
-if [ -z "${GIT_BIN}" ]; then
-    GIT_BIN=git
-fi
-
-printf "\nShowing status...\n"
+title_it 'Showing status'
 bash_it "${GIT_BIN}" status
 
 inc=$(${GIT_BIN} status --porcelain | grep -c '^??' || true)
@@ -66,6 +38,7 @@ if [ -n "${OPENAI_API_KEY}" ]; then
         diff=$("${GIT_BIN}" diff --staged)
     fi
     if [ -n "${GITTED_TESTING}" ]; then
+        # shellcheck disable=SC2154
         PYTHONPATH="${base}/../src:${PYTHONPATH}"
         export PYTHONPATH
     fi

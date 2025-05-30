@@ -27,5 +27,12 @@ git commit -m "version set to ${tag}"
 pip install --progress-bar=off uv
 GITTED_BATCH=true GITTED_TESTING=true make -e
 
+while IFS= read -r f; do
+    true
+    # in this file, finds a string that contains "sub-scripts/common.sh"
+    # and replace it (the entire string) with the contents of the
+    # corresponding file in the sub-scripts/ directory: commons.sh
+done < <(find scripts -type f)
+
 uv --color=never build --no-build-logs
 uv --color=never run python -m twine upload dist/* -u __token__ -p "${token}"
