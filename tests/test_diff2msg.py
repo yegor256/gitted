@@ -2,9 +2,9 @@
 # SPDX-License-Identifier: MIT
 
 import os
-import pytest
 from unittest.mock import patch, MagicMock
 from gitted.diff2msg import generate_commit_message
+
 
 class TestDiff2Msg:
     def test_empty_diff(self):
@@ -12,12 +12,16 @@ class TestDiff2Msg:
         assert result == 'No changes'
         result = generate_commit_message('   ')
         assert result == 'No changes'
+
+
     def test_testing_mode(self):
         with patch.dict(os.environ, {'GITTED_TESTING': 'true'}):
             result = generate_commit_message('some diff', 'test message')
             assert result == 'test message'
             result = generate_commit_message('some diff')
             assert result == ''
+
+
     @patch('gitted.diff2msg.OpenAI')
     def test_openai_call(self, mock_openai):
         mock_response = MagicMock()
@@ -42,6 +46,8 @@ index 0000000..1234567
         assert call_args[1]['model'] == 'gpt-3.5-turbo'
         assert call_args[1]['max_tokens'] == 100
         assert call_args[1]['temperature'] == 0.7
+
+
     @patch('gitted.diff2msg.OpenAI')
     def test_openai_call_with_message(self, mock_openai):
         mock_response = MagicMock()

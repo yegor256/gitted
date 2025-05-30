@@ -30,6 +30,9 @@ No additional explanations or meta information.
 Just return one-sentence commit message, without quotation marks around.
 Try to make it as short as possible, ideally under 80 characters.
 Don't even finish it with a dot, just give me a single sentence."""
-    response = client.chat.completions.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}], max_tokens=100, temperature=0.7)
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": prompt}], max_tokens=100, temperature=0.7
+    )
     result = response.choices[0].message.content.strip()
     return result
