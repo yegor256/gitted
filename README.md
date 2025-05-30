@@ -17,7 +17,7 @@ First, install [Python3], [Git], [pip], [gh], and [Bash].
 Then, install this Python package (with Bash scripts inside):
 
 ```bash
-pip install gitted==0.0.0
+pip install gitted==0.0.5
 ```
 
 Then, in order to make a contribution to a GitHub repo, assuming
