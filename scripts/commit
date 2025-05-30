@@ -46,50 +46,64 @@ title_it 'Generating commit message...'
 branch=$("${GIT_BIN}" symbolic-ref HEAD --short)
 msg="$*"
 if [ "${branch}" == master ]; then
-    if [[ "${msg}" =~ [0-9]+ ]]; then
-        prefix="#${msg}: "
+    if [[ "${msg}" =~ ^[0-9]+$ ]]; then
+        prefix="#${msg}"
         msg=
     else
         prefix=
     fi
 else
-    prefix="#${branch}: "
+    prefix="#${branch}"
 fi
-if "${GIT_BIN}" rev-parse --verify HEAD >/dev/null 2>&1; then
-    if "${GIT_BIN}" rev-parse HEAD >/dev/null 2>&1; then
-        diff=$("${GIT_BIN}" diff HEAD | head -2000)
+if [ -n "${OPENAI_API_KEY}" ]; then
+    if "${GIT_BIN}" rev-parse --verify HEAD >/dev/null 2>&1; then
+        if "${GIT_BIN}" rev-parse HEAD >/dev/null 2>&1; then
+            diff=$("${GIT_BIN}" diff HEAD | head -2000)
+        else
+            diff=$("${GIT_BIN}" diff | head -2000)
+        fi
     else
-        diff=$("${GIT_BIN}" diff | head -2000)
+        diff=$("${GIT_BIN}" diff --staged)
     fi
-else
-    diff=$("${GIT_BIN}" diff --staged)
-fi
-if [ -n "${GITTED_TESTING}" ]; then
-    PYTHONPATH="${base}/../src:${PYTHONPATH}"
-    export PYTHONPATH
-fi
-if ! python3 -c 'import gitted' >/dev/null 2>&1; then
-    echo 'The "gitted" Python package is not installed, run "pip install gitted"'
-    exit 1
-fi
-if ! python3 -c 'import openai' >/dev/null 2>&1; then
-    echo 'Something is wrong with the installation of the "gitted" Python package, try "pip install gitted"'
-    exit 1
-fi
-py=$(cat << 'EOT'
+    if [ -n "${GITTED_TESTING}" ]; then
+        PYTHONPATH="${base}/../src:${PYTHONPATH}"
+        export PYTHONPATH
+    fi
+    if ! python3 -c 'import gitted' >/dev/null 2>&1; then
+        echo 'The "gitted" Python package is not installed, run "pip install gitted"'
+        exit 1
+    fi
+    if ! python3 -c 'import openai' >/dev/null 2>&1; then
+        echo 'Something is wrong with the installation of the "gitted" Python package, try "pip install gitted"'
+        exit 1
+    fi
+    py=$(cat << 'EOT'
 import sys
 from gitted.diff2msg import generate_commit_message
 diff = sys.stdin.read()
 msg = sys.argv[1] if len(sys.argv) > 1 else ''
 print(generate_commit_message(diff, msg))
 EOT
-)
-gpt=$(echo "${diff}" | python3 -c "${py}" "${msg}")
-msg="${prefix}${gpt}"
-if [ -z "${GITTED_BATCH}" ]; then
-    printf "ChatGPT suggested: \e[38;5;208m%s\e[0m\n" "${msg}"
+    )
+    gpt=$(echo "${diff}" | python3 -c "${py}" "${msg}")
+    msg="${prefix}: ${gpt}"
+    if [ -z "${GITTED_BATCH}" ]; then
+        printf "ChatGPT suggested: \e[38;5;208m%s\e[0m\n" "${msg}"
+    else
+        printf "ChatGPT suggested: '%s'\n" "${msg}"
+    fi
 else
-    printf "ChatGPT suggested: '%s'\n" "${msg}"
+    echo 'The OPENAI_API_KEY variable is not set'
+    if [ -z "${msg}" ]; then
+        msg="${prefix}"
+    else
+        msg="${prefix}: ${msg}"
+    fi
+    if [ -z "${GITTED_BATCH}" ]; then
+        printf "Message: \e[38;5;208m%s\e[0m\n" "${msg}"
+    else
+        printf "Message: %s\n" "${msg}"
+    fi
 fi
 
 title_it "Committing the changes..."
