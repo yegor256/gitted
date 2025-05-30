@@ -5,7 +5,7 @@
 docker:
   image: yegor256/python
 assets:
-  token: yegor256/home#assets/gitted/token.txt
+  token.txt: yegor256/home#assets/gitted/token.txt
 install: |
   pdd -f /dev/null
   pip install --progress-bar=off -r requirements.txt
