@@ -10,7 +10,7 @@ name = "gitted"
 version = "0.0.0"
 description = "Collection of Git helper Bash scripts"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.8.1"
 license = {text = "MIT"}
 authors = [
     {name = "Yegor Bugayenko", email = "yegor256@gmail.com"},
@@ -45,6 +45,9 @@ dev-dependencies = [
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
     "twine>=4.0.0",
+    "ruff>=0.8.0",
+    "flake8>=7.0.0",
+    "mypy>=1.0.0",
 ]
 
 [tool.pytest.ini_options]

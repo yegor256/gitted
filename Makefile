@@ -2,22 +2,32 @@
 # SPDX-License-Identifier: MIT
 
 .ONESHELL:
-.PHONY: clean test all
+.PHONY: clean test all pytest ruff flake8 mypy
 SHELL := /bin/bash
 .SHELLFLAGS := -e -o pipefail -c
 
+PYS = $(wildcard src/**.py)
 TESTS = $(subst tests.sh/,,$(wildcard tests.sh/*.sh))
 RESULTS = $(addprefix target/logs/,$(addsuffix .txt,$(TESTS)))
 SCRIPTS = $(wildcard scripts/*)
 
 export
 
-all: pytest test
+all: ruff flake8 mypy pytest test
 
-pytest:
+ruff: $(PYS)
+	uv --color=never run ruff check src/ tests/
+
+flake8: $(PYS)
+	uv --color=never run flake8 src/ tests/
+
+mypy: $(PYS)
+	uv --color=never run mypy src/ tests/
+
+pytest: $(PYS)
 	uv --color=never run pytest tests/ -v --cov=src/gitted --cov-report=term-missing --color=no
 
-test: $(RESULTS)
+test: $(RESULTS) $(PYS)
 
 .SILENT:
 target/logs/%.txt: tests.sh/% $(SCRIPTS) makes/one-test.sh
