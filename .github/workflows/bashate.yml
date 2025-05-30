@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: Copyright (c) 2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
+---
 name: bashate
 'on':
   push:
@@ -19,5 +20,6 @@ jobs:
           python-version: 3.11
       - run: pip install bashate
       - run: |
-          readarray -t files < <(find . \( -name '*.sh' -o -path './scripts/**' \) -type f)
+          readarray -t files \
+            < <(find . \( -name '*.sh' -o -path './scripts/**' \) -type f)
           bashate -i E006 "${files[@]}"
