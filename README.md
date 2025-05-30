@@ -12,7 +12,9 @@ If all you need to do with Git is make branches, push, and sync,
 Well, it simplifies mine, a [hundred](https://github.com/yegor256)
   times per day.
 
-First, install [Python3], [Git], [pip], [gh], and [Bash]. Then:
+First, install [Python3], [Git], [pip], [gh], and [Bash].
+
+Then, install this Python package (with Bash scripts inside):
 
 ```bash
 pip install gitted
