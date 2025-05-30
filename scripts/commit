@@ -32,8 +32,11 @@ fi
 printf "\nShowing status...\n"
 bash_it "${GIT_BIN}" status
 
-printf "\n\e[1mAdding\e[0m new %d files...\n" "$(${GIT_BIN} status --porcelain | grep -c '^ D')"
-bash_it "${GIT_BIN}" add .
+inc=$(${GIT_BIN} status --porcelain | grep -c '^??')
+if [ "${inc}" != '0' ]; then
+    printf "\n\e[1mAdding\e[0m new %d files...\n" "${inc}"
+    bash_it "${GIT_BIN}" add .
+fi
 
 printf "\nGenerating commit message...\n"
 branch=$("${GIT_BIN}" symbolic-ref HEAD --short)
