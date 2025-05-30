@@ -15,7 +15,7 @@ export
 all: pytest test
 
 pytest:
-	uv run pytest
+	uv --color=never run pytest tests/ -v --cov=src/gitted --cov-report=term-missing
 
 test: $(RESULTS)
 
