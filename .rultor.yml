@@ -5,14 +5,14 @@
 docker:
   image: yegor256/python
 assets:
-  twine_token: yegor256/home#assets/twine_token
+  token: yegor256/home#assets/gitted/token.txt
 install: |
   pdd -f /dev/null
   pip install --progress-bar=off -r requirements.txt
 release:
   pre: false
   script: |-
-    ./release.sh "${tag}" "$(cat ../twine_token)"
+    ./release.sh "${tag}" "$(cat ../token.txt)"
 merge:
   script: |-
     GITTED_BATCH=true GITTED_TESTING=true make -e

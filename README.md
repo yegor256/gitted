@@ -58,7 +58,7 @@ In order to work smoothly, you have to respect a few conventions:
 
 * Branch names are always integers, equal to GitHub issue numbers
 * The main branch is `master`
-* All commits are GPG-signed ([how?][gpg])
+* All commits are GPG-signed, if you have a key ([how?][gpg])
 * The `origin` is the fork, while the `upstream` is the main repo ([why?][fork])
 
 Maybe in future versions we'll make these configurable.
