@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: Copyright (c) 2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
-import os
 from gitted.diff2msg import generate_commit_message
 
 
