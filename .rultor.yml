@@ -9,6 +9,8 @@ assets:
 install: |
   pdd -f /dev/null
   pip3 install uv
+  uv --color=never python install 3.12
+  uv --color=never sync --all-extras --dev
 release:
   pre: false
   script: |-
@@ -18,10 +20,9 @@ release:
     sed -i "s/0\.0\.0/${tag}/g" src/gitted/__init__.py
     git add src/gitted/__init__.py
     git commit -m "version set to ${tag}"
-    GITTED_BATCH=true GITTED_TESTING=true make
+    GITTED_BATCH=true GITTED_TESTING=true make -e
     uv --color=never build --no-build-logs
     uv --color=never run python -m twine upload dist/* -u __token__ -p $(cat ../twine_token)
 merge:
   script: |-
-    uv run pytest
-    make
+    GITTED_BATCH=true GITTED_TESTING=true make -e
