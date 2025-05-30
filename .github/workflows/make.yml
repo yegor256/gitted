@@ -18,6 +18,9 @@ jobs:
         os: [ubuntu-24.04, macos-15, windows-2022]
         python-version: ['3.8', '3.12']
     runs-on: ${{ matrix.os }}
+    env:
+      GITTED_TESTING: true
+      GITTED_BATCH: true
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6

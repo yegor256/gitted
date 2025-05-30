@@ -4,6 +4,10 @@
 
 set -e -o pipefail
 
+if [ -n "${GITTED_TESTING}" ]; then
+    set -x
+fi
+
 if ! git rev-parse --git-dir > /dev/null 2>&1; then
     echo "Oops, this is not a Git repository"
     exit 1
