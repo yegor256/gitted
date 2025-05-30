@@ -49,6 +49,10 @@ else
     diff=$(git diff --staged)
 fi
 
+if [ -n "${GITTED_TESTING}" ]; then
+    PYTHONPATH="${base}/../src:${PYTHONPATH}"
+    export PYTHONPATH
+fi
 if ! python3 -c 'import gitted' >/dev/null 2>&1; then
     echo 'The "gitted" Python package is not installed, run "pip install gitted"'
     exit 1
@@ -65,10 +69,6 @@ msg = sys.argv[1] if len(sys.argv) > 1 else ''
 print(generate_commit_message(diff, msg))
 EOT
 )
-if [ -n "${GITTED_TESTING}" ]; then
-    PYTHONPATH="${base}/../src:${PYTHONPATH}"
-    export PYTHONPATH
-fi
 gpt=$(echo "${diff}" | python3 -c "${py}" "${msg}")
 
 msg="${prefix}${gpt}"
