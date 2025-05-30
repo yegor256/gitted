@@ -42,11 +42,11 @@ bash_it "${GIT_BIN}" checkout master
 
 bash_it "${GIT_BIN}" status
 
-printf "\nChecking out the %s branch...\n" "origin/${name}"
+printf "\n\e[1mChecking out\e[0m the %s branch...\n" "origin/${name}"
 bash_it "${GIT_BIN}" checkout -b "${name}"
 
 while true; do
-    printf "\nPushing to the %s branch...\n" "origin/${name}"
+    printf "\n\e[1mPushing to the %s branch...\n" "origin/${name}"
     bash_it "${GIT_BIN}" push origin "${name}" && break
     if [ -n "${GITTED_TESTING}" ]; then
         exit 1

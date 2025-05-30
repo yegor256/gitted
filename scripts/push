@@ -34,7 +34,7 @@ fi
 branch=$(git symbolic-ref HEAD --short)
 
 while true; do
-    printf "\nPushing to %s...\n" "origin/${branch}"
+    printf "\n\e[1mPushing\e[0m to %s...\n" "origin/${branch}"
     bash_it "${GIT_BIN}" push origin "${branch}" && break
     if [ -n "${GITTED_TESTING}" ]; then
         exit 1

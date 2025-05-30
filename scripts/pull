@@ -28,7 +28,11 @@ if [ -z "${GIT_BIN}" ]; then
 fi
 
 branch=$("${GIT_BIN}" symbolic-ref HEAD --short)
-printf "Current branch is '%s'" "${branch}"
+if [ -z "${branch}" ]; then
+    echo "Something is wrong, the current branch was not detected"
+    exit 1
+fi
+printf "\nCurrent branch is \e[1m%s\e[0m\n" "${branch}"
 
 if ! "${GIT_BIN}" rev-parse --abbrev-ref --symbolic-full-name '@{u}' >/dev/null 2>&1; then
     printf "\nThe upstream is not configured for the '%s' branch, setting it to 'origin/%s'" "${branch}" "${branch}"
@@ -37,7 +41,7 @@ if ! "${GIT_BIN}" rev-parse --abbrev-ref --symbolic-full-name '@{u}' >/dev/null 
 fi
 
 if [ -e .git/modules ]; then
-    printf "\nA few submodules need to be pulled first...\n"
+    printf "\n\e[1mUpdating\e[0m a few submodules first...\n"
     while true; do
         bash_it "${GIT_BIN}" submodule update --remote && break
         if [ -n "${GITTED_TESTING}" ]; then
@@ -51,14 +55,14 @@ bash_it "${GIT_BIN}" add .
 
 stashed=no
 if ! git diff --quiet || ! git diff --cached --quiet; then
-    trap "echo 'Applying the changes back...' && \${GIT_BIN} stash apply" EXIT
-    printf "\nStashing local changes (%d files)...\n" "$(${GIT_BIN} status --porcelain | wc -l)"
+    trap "printf '\nApplying the changes back...\n' && bash_it \${GIT_BIN} stash apply" EXIT
+    printf "\n\e[1mStashing\e[0m local changes (%d files)...\n" "$(${GIT_BIN} status --porcelain | wc -l)"
     bash_it "${GIT_BIN}" stash
     stashed=yes
 fi
 
 while true; do
-    printf "\nPulling from %s...\n" "origin/${branch}"
+    printf "\n\e[1mPulling\e[0m from %s...\n" "origin/${branch}"
     bash_it "${GIT_BIN}" pull origin "${branch}" && break
     if [ -n "${GITTED_TESTING}" ]; then
         exit 1
@@ -66,7 +70,7 @@ while true; do
 done
 trap - EXIT
 if [ "${stashed}" == 'yes' ]; then
-    printf "\nTrying to apply the changes back...\n"
+    printf "\nTrying to \e[1mapply\e[0m the changes back...\n"
     bash_it "${GIT_BIN}" stash apply
 fi
 

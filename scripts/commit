@@ -32,7 +32,7 @@ fi
 printf "\nShowing status...\n"
 bash_it "${GIT_BIN}" status
 
-printf "\nAdding new %d files...\n" "$(${GIT_BIN} status --porcelain | grep -c '^ D')"
+printf "\n\e[1mAdding\e[0m new %d files...\n" "$(${GIT_BIN} status --porcelain | grep -c '^ D')"
 bash_it "${GIT_BIN}" add .
 
 printf "\nGenerating commit message...\n"
@@ -85,7 +85,7 @@ else
     printf "ChatGPT suggested: '%s'\n" "${msg}"
 fi
 
-printf "\nCommitting the changes...\n"
+printf "\n\e[1mCommitting\e[0m the changes...\n"
 opts=(--allow-empty --all)
 if [ -n "${GITTED_TESTING}" ]; then
     opts+=(--no-verify)
