@@ -9,7 +9,6 @@ setup(
     scripts=[
         "scripts/branch",
         "scripts/commit",
-        "scripts/diff2msg",
         "scripts/pull",
         "scripts/push"
     ],

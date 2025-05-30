@@ -19,7 +19,7 @@ if [ -z "${GIT_BIN}" ]; then
   GIT_BIN=git
 fi
 
-"${base}/commit"
+"${base}/commit" "$*"
 
 branch=$(git symbolic-ref HEAD --short)
 

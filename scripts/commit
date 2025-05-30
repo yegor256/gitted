@@ -49,7 +49,21 @@ else
     diff=$(git diff --staged)
 fi
 
-msg="${prefix}$(echo "${diff}" | "${base}/diff2msg")"
+py=$(cat << 'EOT'
+import sys
+from gitted.diff2msg import generate_commit_message
+diff = sys.stdin.read()
+msg = sys.argv[1] if len(sys.argv) > 1 else ''
+print(generate_commit_message(diff, msg))
+EOT
+)
+if [ -n "${GITTED_TESTING}" ]; then
+    PYTHONPATH="${base}/../src:${PYTHONPATH}"
+    export PYTHONPATH
+fi
+gpt=$(echo "${diff}" | python3 -c "${py}" "${msg}")
+
+msg="${prefix}${gpt}"
 if [ -z "${GITTED_BATCH}" ]; then
     printf "ChatGPT suggested: \e[38;5;208m%s\e[0m\n" "${msg}"
 else

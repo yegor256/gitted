@@ -7,9 +7,6 @@ set -ex -o pipefail
 tmp=$(pwd)
 base=$(realpath "$(dirname "$0")/..")
 
-echo "echo \"fake-message44\"" > openai.sh
-chmod a+x openai.sh
-
 rm -rf here
 git init here --initial-branch=master
 cd here || exit 1
@@ -21,8 +18,7 @@ git commit --no-verify -am 'start'
 touch second.txt
 
 env "GITTED_TESTING=true" \
-    "OPENAI_BIN=${tmp}/openai.sh" \
-    "${base}/scripts/commit" 2>&1 | tee "${tmp}/log.txt"
+    "${base}/scripts/commit" fake-message44 2>&1 | tee "${tmp}/log.txt"
 cd .. || exit 1
 
 cd here || exit 1
