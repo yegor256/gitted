@@ -14,6 +14,10 @@ fi
 
 echo "Gitted 0.0.0 (any issues or ideas, submit to https://github.com/yegor256/gitted)"
 
+function title_it {
+    printf '\n\e[1m%s\e[0m\n' "$@"
+}
+
 function bash_it {
     printf '%q ' "$@" | /bin/bash -x
 }
@@ -42,16 +46,16 @@ bash_it "${GIT_BIN}" checkout master
 
 bash_it "${GIT_BIN}" status
 
-printf "\n\e[1mChecking out\e[0m the %s branch...\n" "origin/${name}"
+title_it "Checking out the origin/${name} branch"
 bash_it "${GIT_BIN}" checkout -b "${name}"
 
 while true; do
-    printf "\n\e[1mPushing to the %s branch...\n" "origin/${name}"
+    title_it "Pushing to the origin/${name} branch"
     bash_it "${GIT_BIN}" push origin "${name}" && break
     if [ -n "${GITTED_TESTING}" ]; then
         exit 1
     fi
 done
 
-printf "\nSetting the upstream of the %s branch...\n" "origin/${name}"
+title_it "Setting the upstream of the origin/${name} branch"
 bash_it "${GIT_BIN}" branch "--set-upstream-to=origin/${name}" "${name}"

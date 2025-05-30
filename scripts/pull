@@ -14,6 +14,10 @@ fi
 
 echo "Gitted 0.0.0 (any issues or ideas, submit to https://github.com/yegor256/gitted)"
 
+function title_it {
+    printf '\n\e[1m%s\e[0m\n' "$@"
+}
+
 function bash_it {
     printf '%q ' "$@" | /bin/bash -x
 }
@@ -32,16 +36,15 @@ if [ -z "${branch}" ]; then
     echo "Something is wrong, the current branch was not detected"
     exit 1
 fi
-printf "\nCurrent branch is \e[1m%s\e[0m\n" "${branch}"
 
 if ! "${GIT_BIN}" rev-parse --abbrev-ref --symbolic-full-name '@{u}' >/dev/null 2>&1; then
-    printf "\nThe upstream is not configured for the '%s' branch, setting it to 'origin/%s'" "${branch}" "${branch}"
+    title_it "The upstream is not configured for the ${branch} branch, setting it to origin/${branch}"
     bash_it "${GIT_BIN}" fetch
     bash_it "${GIT_BIN}" branch "--set-upstream-to=origin/${branch}" "${branch}"
 fi
 
 if [ -e .git/modules ]; then
-    printf "\n\e[1mUpdating\e[0m a few submodules first...\n"
+    title_it "Updating a few submodules first..."
     while true; do
         bash_it "${GIT_BIN}" submodule update --remote && break
         if [ -n "${GITTED_TESTING}" ]; then
@@ -50,19 +53,19 @@ if [ -e .git/modules ]; then
     done
 fi
 
-printf "\nStaging local changes (%d files)...\n" "$(${GIT_BIN} status --porcelain | wc -l)"
+title_it "Staging local changes ($(${GIT_BIN} status --porcelain | wc -l) files)"
 bash_it "${GIT_BIN}" add .
 
 stashed=no
 if ! git diff --quiet || ! git diff --cached --quiet; then
-    trap "printf '\nApplying the changes back...\n' && bash_it \${GIT_BIN} stash apply" EXIT
-    printf "\n\e[1mStashing\e[0m local changes (%d files)...\n" "$(${GIT_BIN} status --porcelain | wc -l)"
+    trap "title_it 'Applying the changes back' && bash_it \${GIT_BIN} stash apply" EXIT
+    title_it "Stashing local changes ($(${GIT_BIN} status --porcelain | wc -l) files)"
     bash_it "${GIT_BIN}" stash
     stashed=yes
 fi
 
 while true; do
-    printf "\n\e[1mPulling\e[0m from %s...\n" "origin/${branch}"
+    title_it "Pulling from origin/${branch}"
     bash_it "${GIT_BIN}" pull origin "${branch}" && break
     if [ -n "${GITTED_TESTING}" ]; then
         exit 1
@@ -70,7 +73,7 @@ while true; do
 done
 trap - EXIT
 if [ "${stashed}" == 'yes' ]; then
-    printf "\nTrying to \e[1mapply\e[0m the changes back...\n"
+    title_it "Trying to apply the changes back"
     bash_it "${GIT_BIN}" stash apply
 fi
 

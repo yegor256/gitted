@@ -14,6 +14,10 @@ fi
 
 echo "Gitted 0.0.0 (any issues or ideas, submit to https://github.com/yegor256/gitted)"
 
+function title_it {
+    printf '\n\e[1m%s\e[0m\n' "$@"
+}
+
 function bash_it {
     printf '%q ' "$@" | /bin/bash -x
 }
@@ -34,11 +38,11 @@ bash_it "${GIT_BIN}" status
 
 inc=$(${GIT_BIN} status --porcelain | grep -c '^??')
 if [ "${inc}" != '0' ]; then
-    printf "\n\e[1mAdding\e[0m new %d files...\n" "${inc}"
+    title_it "Adding new ${inc} files..."
     bash_it "${GIT_BIN}" add .
 fi
 
-printf "\nGenerating commit message...\n"
+title_it 'Generating commit message...'
 branch=$("${GIT_BIN}" symbolic-ref HEAD --short)
 msg="$*"
 if [ "${branch}" == master ]; then
@@ -88,7 +92,7 @@ else
     printf "ChatGPT suggested: '%s'\n" "${msg}"
 fi
 
-printf "\n\e[1mCommitting\e[0m the changes...\n"
+title_it "Committing the changes..."
 opts=(--allow-empty --all)
 if [ -n "${GITTED_TESTING}" ]; then
     opts+=(--no-verify)
