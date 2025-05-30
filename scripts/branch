@@ -15,7 +15,7 @@ fi
 echo "Gitted 0.0.0 (any issues or ideas, submit to https://github.com/yegor256/gitted)"
 
 function bash_it {
-    /bin/bash -x -c "$*"
+    printf '%q ' "$@" | /bin/bash -x
 }
 
 if ! git rev-parse --git-dir > /dev/null 2>&1; then
@@ -42,13 +42,16 @@ bash_it "${GIT_BIN}" checkout master
 
 bash_it "${GIT_BIN}" status
 
+printf "\nChecking out the %s branch...\n" "origin/${name}"
 bash_it "${GIT_BIN}" checkout -b "${name}"
 
 while true; do
+    printf "\nPushing to the %s branch...\n" "origin/${name}"
     bash_it "${GIT_BIN}" push origin "${name}" && break
     if [ -n "${GITTED_TESTING}" ]; then
         exit 1
     fi
 done
 
+printf "\nSetting the upstream of the %s branch...\n" "origin/${name}"
 bash_it "${GIT_BIN}" branch "--set-upstream-to=origin/${name}" "${name}"

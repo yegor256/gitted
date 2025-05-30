@@ -29,13 +29,13 @@ if [ -z "${GIT_BIN}" ]; then
     GIT_BIN=git
 fi
 
-# Show status, to make the changes visible:
+printf "\nShowing status...\n"
 bash_it "${GIT_BIN}" status
 
-# Add all files:
+printf "\nAdding new %d files...\n" "$(${GIT_BIN} status --porcelain | grep -c '^ D')"
 bash_it "${GIT_BIN}" add .
 
-# Generate commit message:
+printf "\nGenerating commit message...\n"
 branch=$("${GIT_BIN}" symbolic-ref HEAD --short)
 msg="$*"
 if [ "${branch}" == master ]; then
@@ -48,7 +48,6 @@ if [ "${branch}" == master ]; then
 else
     prefix="#${branch}: "
 fi
-
 if "${GIT_BIN}" rev-parse --verify HEAD >/dev/null 2>&1; then
     if "${GIT_BIN}" rev-parse HEAD >/dev/null 2>&1; then
         diff=$("${GIT_BIN}" diff HEAD | head -2000)
@@ -58,7 +57,6 @@ if "${GIT_BIN}" rev-parse --verify HEAD >/dev/null 2>&1; then
 else
     diff=$("${GIT_BIN}" diff --staged)
 fi
-
 if [ -n "${GITTED_TESTING}" ]; then
     PYTHONPATH="${base}/../src:${PYTHONPATH}"
     export PYTHONPATH
@@ -80,15 +78,14 @@ print(generate_commit_message(diff, msg))
 EOT
 )
 gpt=$(echo "${diff}" | python3 -c "${py}" "${msg}")
-
 msg="${prefix}${gpt}"
 if [ -z "${GITTED_BATCH}" ]; then
     printf "ChatGPT suggested: \e[38;5;208m%s\e[0m\n" "${msg}"
 else
-    echo "ChatGPT suggested: '${msg}'"
+    printf "ChatGPT suggested: '%s'\n" "${msg}"
 fi
 
-# Commit the changes:
+printf "\nCommitting the changes...\n"
 opts=(--allow-empty --all)
 if [ -n "${GITTED_TESTING}" ]; then
     opts+=(--no-verify)

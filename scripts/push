@@ -15,7 +15,7 @@ fi
 echo "Gitted 0.0.0 (any issues or ideas, submit to https://github.com/yegor256/gitted)"
 
 function bash_it {
-    /bin/bash -x -c "$*"
+    printf '%q ' "$@" | /bin/bash -x
 }
 
 if ! git rev-parse --git-dir > /dev/null 2>&1; then
@@ -34,6 +34,7 @@ fi
 branch=$(git symbolic-ref HEAD --short)
 
 while true; do
+    printf "\nPushing to %s...\n" "origin/${branch}"
     bash_it "${GIT_BIN}" push origin "${branch}" && break
     if [ -n "${GITTED_TESTING}" ]; then
         exit 1
