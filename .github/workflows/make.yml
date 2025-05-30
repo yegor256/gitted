@@ -26,13 +26,11 @@ jobs:
       - uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
+          activate-environment: true
           cache-dependency-glob: "pyproject.toml"
       - run: uv --color=never python install ${{ matrix.python-version }}
       - run: uv --color=never sync --all-extras --dev
-      - run: uv --color=never pip install -r requirements.txt
-      - run: pip install -r requirements.txt
       - run: make -e
       - run: uv --color=never build --no-build-logs
-      - run: |
-          uv pip install dist/*.whl
-          uv --color=never run python -c "import gitted; print('Package imported successfully')"
+      - run: uv pip install dist/*.whl
+      - run: uv --color=never run python -c "import gitted; print('Package imported successfully')"
