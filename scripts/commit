@@ -49,6 +49,14 @@ else
     diff=$(git diff --staged)
 fi
 
+if ! python3 -c 'import gitted' >/dev/null 2>&1; then
+    echo 'The "gitted" Python package is not installed, run "pip install gitted"'
+    exit 1
+fi
+if ! python3 -c 'import openai' >/dev/null 2>&1; then
+    echo 'Something is wrong with the installation of the "gitted" Python package, try "pip install gitted"'
+    exit 1
+fi
 py=$(cat << 'EOT'
 import sys
 from gitted.diff2msg import generate_commit_message
