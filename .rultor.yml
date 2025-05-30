@@ -8,7 +8,7 @@ assets:
   twine_token: yegor256/home#assets/twine_token
 install: |
   pdd -f /dev/null
-  pip install -r requirements.txt
+  pip install --progress-bar=off -r requirements.txt
 release:
   pre: false
   script: |-
@@ -18,8 +18,8 @@ release:
     sed -i "s/0\.0\.0/${tag}/g" src/gitted/__init__.py
     git add src/gitted/__init__.py
     git commit -m "version set to ${tag}"
+    pip install --progress-bar=off uv
     GITTED_BATCH=true GITTED_TESTING=true make -e
-    pip install uv
     uv --color=never build --no-build-logs
     uv --color=never run python -m twine upload dist/* -u __token__ -p $(cat ../twine_token)
 merge:
