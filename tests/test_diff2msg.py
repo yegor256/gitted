@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: MIT
 
 import os
-import pytest
 from gitted.diff2msg import generate_commit_message
 
 
