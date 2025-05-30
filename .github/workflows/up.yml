@@ -6,7 +6,7 @@ name: up
 'on':
   push:
 permissions:
-  contents: write
+  pull-requests: write
 jobs:
   up:
     timeout-minutes: 15
