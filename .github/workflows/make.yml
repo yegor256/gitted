@@ -27,10 +27,10 @@ jobs:
         with:
           enable-cache: true
           cache-dependency-glob: "pyproject.toml"
-      - run: uv python install ${{ matrix.python-version }}
-      - run: uv sync --all-extras --dev
+      - run: uv --color=never python install ${{ matrix.python-version }}
+      - run: uv --color=never sync --all-extras --dev
       - run: make
-      - run: uv build
+      - run: uv --color=never build --no-build-logs
       - run: |
           uv pip install dist/*.whl
-          uv run python -c "import gitted; print('Package imported successfully')"
+          uv --color=never run python -c "import gitted; print('Package imported successfully')"

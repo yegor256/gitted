@@ -19,7 +19,7 @@ mkdir -p "${tmp}"
 if [ -z "${GITTED_BATCH}" ]; then
     printf "Running \e[1m%s\e[0m ... " "${test}"
 else
-    echo "Running ${test}:"
+    echo "Running ${test}"
 fi
 
 if ! /bin/bash -c "cd \"${tmp}\" && exec \"${sh}\" > \"${log}\" 2>&1"; then

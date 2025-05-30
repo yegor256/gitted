@@ -19,8 +19,8 @@ release:
     git add src/gitted/__init__.py
     git commit -m "version set to ${tag}"
     GITTED_BATCH=true GITTED_TESTING=true make
-    uv build
-    uv run python -m twine upload dist/* -u __token__ -p $(cat ../twine_token)
+    uv --color=never build --no-build-logs
+    uv --color=never run python -m twine upload dist/* -u __token__ -p $(cat ../twine_token)
 merge:
   script: |-
     uv run pytest
