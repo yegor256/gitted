@@ -28,7 +28,7 @@ GITTED_BATCH=true GITTED_TESTING=true make -e
 while IFS= read -r f; do
     n=$(basename "${f}")
     n=${n%.*}
-    printf '%s=%s(cat << EOT\n%s\nEOT\n)\n\n%s' "${n}" "\$" "$(cat "${f}")" "$(cat sub-scripts/intro.sh)" > sub-scripts/intro.sh
+    printf '%s=%s(cat << EOT\n%s\nEOT\n)\n\n%s' "help_${n}" "\$" "$(cat "${f}")" "$(cat sub-scripts/intro.sh)" > sub-scripts/intro.sh
 done < <(find help -type f -name '*.txt')
 
 while IFS= read -r f; do

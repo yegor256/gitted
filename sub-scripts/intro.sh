@@ -6,7 +6,8 @@ set -e -o pipefail
 
 if [ "$1" == '--help' ]; then
     cmd=$(basename "$0")
-    help=${!cmd}
+    var="help_${cmd}"
+    help=${!var}
     if [ -z "${help}" ]; then
         echo "Usage: ${cmd} --help"
     else
