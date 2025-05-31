@@ -8,7 +8,7 @@
 # shellcheck disable=SC1091
 . "$(dirname "$0")/../sub-scripts/commons.sh"
 
-if ! "${GIT_BIN}" remote | grep ^origin; then
+if ! "${GIT_BIN}" remote | grep -q ^origin; then
     echo "No remote by the name 'origin', nothing to pull from"
     exit
 fi

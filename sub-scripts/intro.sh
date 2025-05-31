@@ -4,4 +4,8 @@
 
 set -e -o pipefail
 
-echo "Gitted 0.0.0 (any issues or ideas, submit to https://github.com/yegor256/gitted)"
+if [ -z "${GITTED_INTRODUCED}" ]; then
+    printf "Gitted 0.0.0 (any issues or ideas, submit to https://github.com/yegor256/gitted)\n\n"
+    GITTED_INTRODUCED=true
+    export GITTED_INTRODUCED
+fi
