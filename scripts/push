@@ -17,5 +17,5 @@ while true; do
     if [ -n "${GITTED_TESTING}" ]; then
         exit 1
     fi
-    (( attempt++ ))
+    attempt=$((attempt + 1))
 done
