@@ -71,7 +71,7 @@ print(generate_commit_message(diff, msg))
 EOT
     )
     gpt=$(echo "${diff}" | python3 -c "${py}" "${msg}")
-    msg="${prefix}: ${gpt}"
+    msg="${prefix}${gpt}"
     printf "ChatGPT suggested: %s\n" "${gpt}"
 else
     warn_it 'The OPENAI_API_KEY variable is not set'
