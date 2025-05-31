@@ -31,13 +31,13 @@ msg="$*"
 # shellcheck disable=SC2154
 if [ "${branch}" == "${master}" ]; then
     if [[ "${msg}" =~ ^[0-9]+$ ]]; then
-        prefix="#${msg}"
+        prefix="#${msg}: "
         msg=
     else
         prefix=
     fi
 else
-    prefix="#${branch}"
+    prefix="#${branch}: "
 fi
 if [ -n "${OPENAI_API_KEY}" ]; then
     if "${GIT_BIN}" rev-parse --verify HEAD >/dev/null 2>&1; then
@@ -76,9 +76,9 @@ EOT
 else
     warn_it 'The OPENAI_API_KEY variable is not set'
     if [ -z "${msg}" ]; then
-        msg="${prefix}"
+        msg="${prefix}no comments"
     else
-        msg="${prefix}: ${msg}"
+        msg="${prefix}${msg}"
     fi
 fi
 if [ -z "${GITTED_BATCH}" ]; then
