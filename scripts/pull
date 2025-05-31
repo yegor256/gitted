@@ -65,6 +65,9 @@ if git ls-remote --exit-code origin "refs/heads/${master}"; then
             exit 1
         fi
         attempt=$((attempt + 1))
+        if [ "${attempt}" -gt 10 ]; then
+            exit 1
+        fi
     done
 fi
 
