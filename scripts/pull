@@ -18,7 +18,8 @@ if ! "${GIT_BIN}" rev-parse --abbrev-ref --symbolic-full-name '@{u}' >/dev/null 
 fi
 
 if [ -e .git/modules ]; then
-    title_it "Updating a few submodules first..."
+    subs=$(grep -c '^\[submodule' .gitmodules)
+    title_it "Updating ${subs} submodule(s) first..."
     while true; do
         bash_it "${GIT_BIN}" submodule update --remote && break
         if [ -n "${GITTED_TESTING}" ]; then
@@ -41,12 +42,14 @@ if ! git diff --quiet || ! git diff --cached --quiet; then
     stashed=yes
 fi
 
+attempt=0
 while true; do
-    title_it "Pulling from origin/${branch}"
+    title_it "Pulling from origin/${branch} (attempt no.${attempt})"
     bash_it "${GIT_BIN}" pull origin "${branch}" && break
     if [ -n "${GITTED_TESTING}" ]; then
         exit 1
     fi
+    (( attempt++ ))
 done
 trap - EXIT
 if [ "${stashed}" == 'yes' ]; then
