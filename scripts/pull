@@ -56,7 +56,7 @@ if git rev-parse --verify HEAD > /dev/null 2>&1; then
 fi
 
 # shellcheck disable=SC2154
-if git ls-remote --exit-code origin "refs/heads/${master}"; then
+if git ls-remote --exit-code origin "refs/heads/${master}" > /dev/null 2>&1; then
     attempt=1
     while true; do
         title_it "Pulling from origin/${branch} (attempt no.${attempt})"
