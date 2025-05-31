@@ -4,6 +4,7 @@
 
 [![make](https://github.com/yegor256/gitted/actions/workflows/make.yml/badge.svg)](https://github.com/yegor256/gitted/actions/workflows/make.yml)
 [![PDD status](https://www.0pdd.com/svg?name=yegor256/gitted)](https://www.0pdd.com/p?name=yegor256/gitted)
+[![codecov](https://codecov.io/gh/yegor256/gitted/graph/badge.svg?token=FT945WCK1K)](https://codecov.io/gh/yegor256/gitted)
 [![Hits-of-Code](https://hitsofcode.com/github/yegor256/gitted)](https://hitsofcode.com/view/github/yegor256/gitted)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/yegor256/gitted/blob/master/LICENSE.txt)
 
