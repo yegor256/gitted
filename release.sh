@@ -30,6 +30,8 @@ while IFS= read -r f; do
     while IFS= read -r line; do
         if [[ "${line}" =~ commons\.sh ]]; then
             cat sub-scripts/commons.sh
+        elif [[ "${line}" =~ intro\.sh ]]; then
+            cat sub-scripts/intro.sh
         else
             echo "${line}"
         fi

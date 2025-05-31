@@ -3,6 +3,9 @@
 # SPDX-License-Identifier: MIT
 
 # shellcheck disable=SC1091
+. "$(dirname "$0")/../sub-scripts/intro.sh"
+
+# shellcheck disable=SC1091
 . "$(dirname "$0")/../sub-scripts/commons.sh"
 
 name=$1
@@ -12,7 +15,8 @@ if [ -z "${name}" ]; then
     exit 1
 fi
 
-bash_it "${GIT_BIN}" checkout master
+# shellcheck disable=SC2154
+bash_it "${GIT_BIN}" checkout "${master}"
 
 # shellcheck disable=SC2154
 "${base}/pull"
