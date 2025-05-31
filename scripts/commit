@@ -3,7 +3,15 @@
 # SPDX-License-Identifier: MIT
 
 # shellcheck disable=SC1091
+. "$(dirname "$0")/../sub-scripts/intro.sh"
+
+# shellcheck disable=SC1091
 . "$(dirname "$0")/../sub-scripts/commons.sh"
+
+if ! git status --porcelain | grep -q .; then
+    echo "There is nothing to commit"
+    exit 1
+fi
 
 title_it 'Showing status'
 bash_it "${GIT_BIN}" status
@@ -17,7 +25,8 @@ fi
 title_it 'Generating commit message...'
 branch=$("${GIT_BIN}" symbolic-ref HEAD --short)
 msg="$*"
-if [ "${branch}" == master ]; then
+# shellcheck disable=SC2154
+if [ "${branch}" == "${master}" ]; then
     if [[ "${msg}" =~ ^[0-9]+$ ]]; then
         prefix="#${msg}"
         msg=

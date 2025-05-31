@@ -12,8 +12,6 @@ if [ -n "${GITTED_VERBOSE}" ]; then
     set -x
 fi
 
-echo "Gitted 0.0.0 (any issues or ideas, submit to https://github.com/yegor256/gitted)"
-
 function title_it {
     printf '\n\e[1m%s\e[0m...\n' "$@"
 }
@@ -29,6 +27,9 @@ fi
 
 base=$(dirname "$0")
 export base
+
+master=master
+export master
 
 if [ -z "${GIT_BIN}" ]; then
     GIT_BIN=git

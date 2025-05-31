@@ -3,7 +3,15 @@
 # SPDX-License-Identifier: MIT
 
 # shellcheck disable=SC1091
+. "$(dirname "$0")/../sub-scripts/intro.sh"
+
+# shellcheck disable=SC1091
 . "$(dirname "$0")/../sub-scripts/commons.sh"
+
+if ! "${GIT_BIN}" remote | grep ^origin; then
+    echo "No remote by the name 'origin', nothing to pull from"
+    exit
+fi
 
 branch=$("${GIT_BIN}" symbolic-ref HEAD --short)
 if [ -z "${branch}" ]; then
@@ -12,9 +20,11 @@ if [ -z "${branch}" ]; then
 fi
 
 if ! "${GIT_BIN}" rev-parse --abbrev-ref --symbolic-full-name '@{u}' >/dev/null 2>&1; then
-    title_it "The upstream is not configured for the ${branch} branch, setting it to origin/${branch}"
-    bash_it "${GIT_BIN}" fetch
-    bash_it "${GIT_BIN}" branch "--set-upstream-to=origin/${branch}" "${branch}"
+    if git rev-parse --verify HEAD > /dev/null 2>&1; then
+        title_it "The upstream is not configured for the ${branch} branch, setting it to origin/${branch}"
+        bash_it "${GIT_BIN}" fetch
+        bash_it "${GIT_BIN}" branch "--set-upstream-to=origin/${branch}" "${branch}"
+    fi
 fi
 
 if [ -e .git/modules ]; then
@@ -35,22 +45,32 @@ if [ ! "${inc}" == '0' ]; then
 fi
 
 stashed=no
-if ! git diff --quiet || ! git diff --cached --quiet; then
-    trap "title_it 'Applying the changes back' && bash_it \${GIT_BIN} stash apply" EXIT
-    title_it "Stashing local changes ($(${GIT_BIN} status --porcelain | wc -l) files)"
-    bash_it "${GIT_BIN}" stash
-    stashed=yes
+if git rev-parse --verify HEAD > /dev/null 2>&1; then
+    if ! git diff --quiet || ! git diff --cached --quiet; then
+        trap "title_it 'Applying the changes back' && bash_it \${GIT_BIN} stash apply" EXIT
+        df=$(${GIT_BIN} status --porcelain | wc -l | xargs)
+        title_it "Stashing local changes (${df} files)"
+        bash_it "${GIT_BIN}" stash
+        stashed=yes
+    fi
 fi
 
-attempt=0
-while true; do
-    title_it "Pulling from origin/${branch} (attempt no.${attempt})"
-    bash_it "${GIT_BIN}" pull origin "${branch}" && break
-    if [ -n "${GITTED_TESTING}" ]; then
-        exit 1
-    fi
-    attempt=$((attempt + 1))
-done
+# shellcheck disable=SC2154
+if git ls-remote --exit-code origin "refs/heads/${master}"; then
+    attempt=0
+    while true; do
+        title_it "Pulling from origin/${branch} (attempt no.${attempt})"
+        bash_it "${GIT_BIN}" pull origin "${branch}" && break
+        if [ -n "${GITTED_TESTING}" ]; then
+            exit 1
+        fi
+        attempt=$((attempt + 1))
+        if [ "${attempt}" -gt 10 ]; then
+            exit 1
+        fi
+    done
+fi
+
 trap - EXIT
 if [ "${stashed}" == 'yes' ]; then
     title_it "Applying the changes back"
@@ -59,5 +79,5 @@ fi
 
 if ${GIT_BIN} remote | cut -f1 -d ' ' | grep upstream; then
     title_it "Pulling from upstream"
-    ${GIT_BIN} pull upstream master
+    ${GIT_BIN} pull upstream "${master}"
 fi
