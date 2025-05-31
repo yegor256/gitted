@@ -12,13 +12,13 @@
 . "$(dirname "$0")/../sub-scripts/sanity.sh"
 
 if ! "${GIT_BIN}" remote | grep -q ^origin; then
-    echo "No remote by the name 'origin', nothing to pull from"
+    warn_it "No remote by the name 'origin', nothing to pull from"
     exit
 fi
 
 branch=$("${GIT_BIN}" symbolic-ref HEAD --short)
 if [ -z "${branch}" ]; then
-    echo "Something is wrong, the current branch was not detected"
+    warn_it "Something is wrong, the current branch was not detected"
     exit 1
 fi
 

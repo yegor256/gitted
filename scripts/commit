@@ -12,7 +12,7 @@
 . "$(dirname "$0")/../sub-scripts/sanity.sh"
 
 if ! git status --porcelain | grep -q .; then
-    echo "There is nothing to commit"
+    warn_it "There is nothing to commit"
     exit 1
 fi
 
@@ -55,11 +55,11 @@ if [ -n "${OPENAI_API_KEY}" ]; then
         export PYTHONPATH
     fi
     if ! python3 -c 'import gitted' >/dev/null 2>&1; then
-        echo 'The "gitted" Python package is not installed, run "pip install gitted"'
+        warn_it 'The "gitted" Python package is not installed, run "pip install gitted"'
         exit 1
     fi
     if ! python3 -c 'import openai' >/dev/null 2>&1; then
-        echo 'Something is wrong with the installation of the "gitted" Python package, try "pip install gitted"'
+        warn_it 'Something is wrong with the installation of the "gitted" Python package, try "pip install gitted"'
         exit 1
     fi
     py=$(cat << 'EOT'
@@ -74,7 +74,7 @@ EOT
     msg="${prefix}: ${gpt}"
     printf "ChatGPT suggested: %s\n" "${gpt}"
 else
-    echo 'The OPENAI_API_KEY variable is not set'
+    warn_it 'The OPENAI_API_KEY variable is not set'
     if [ -z "${msg}" ]; then
         msg="${prefix}"
     else

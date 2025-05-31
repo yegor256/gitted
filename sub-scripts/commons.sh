@@ -16,6 +16,10 @@ function title_it {
     printf '\n👉🏻 \e[1m%s\e[0m...\n' "$@"
 }
 
+function warn_it {
+    printf '\e[38;5;196m%s\e[0m\n' "$@"
+}
+
 function bash_it {
     printf '%q ' "$@" | /bin/bash -x
 }
