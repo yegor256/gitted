@@ -20,6 +20,13 @@ function bash_it {
     printf '%q ' "$@" | /bin/bash -x
 }
 
+function plural {
+    printf "%s %s" "$1" "$2"
+    if [ "$1" != '1' ]; then
+        printf 's'
+    fi
+}
+
 if ! git rev-parse --git-dir > /dev/null 2>&1; then
     echo "Oops, this is not a Git repository"
     exit 1

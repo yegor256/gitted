@@ -29,7 +29,7 @@ fi
 
 if [ -e .git/modules ]; then
     subs=$(grep -c '^\[submodule' .gitmodules)
-    title_it "Updating ${subs} submodule(s) first..."
+    title_it "Updating $(plural "${subs}" 'submodule') first..."
     while true; do
         bash_it "${GIT_BIN}" submodule update --remote && break
         if [ -n "${GITTED_TESTING}" ]; then
@@ -40,7 +40,7 @@ fi
 
 inc=$(${GIT_BIN} status --porcelain | grep -c '^??' || true)
 if [ ! "${inc}" == '0' ]; then
-    title_it "Staging local changes (${inc} files)"
+    title_it "Staging $(plural "${inc}" 'file')"
     bash_it "${GIT_BIN}" add .
 fi
 
@@ -49,7 +49,7 @@ if git rev-parse --verify HEAD > /dev/null 2>&1; then
     if ! git diff --quiet || ! git diff --cached --quiet; then
         trap "title_it 'Applying the changes back' && bash_it \${GIT_BIN} stash apply" EXIT
         df=$(${GIT_BIN} status --porcelain | wc -l | xargs)
-        title_it "Stashing local changes (${df} files)"
+        title_it "Stashing $(plural "${df}" 'file')"
         bash_it "${GIT_BIN}" stash
         stashed=yes
     fi
