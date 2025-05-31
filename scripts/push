@@ -16,7 +16,7 @@
 
 branch=$(git symbolic-ref HEAD --short)
 
-attempt=0
+attempt=1
 while true; do
     title_it "Pushing to origin/${branch} (attempt no.${attempt})"
     bash_it "${GIT_BIN}" push origin "${branch}" && break

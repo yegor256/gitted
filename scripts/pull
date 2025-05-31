@@ -57,7 +57,7 @@ fi
 
 # shellcheck disable=SC2154
 if git ls-remote --exit-code origin "refs/heads/${master}"; then
-    attempt=0
+    attempt=1
     while true; do
         title_it "Pulling from origin/${branch} (attempt no.${attempt})"
         bash_it "${GIT_BIN}" pull origin "${branch}" && break
