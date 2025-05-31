@@ -18,8 +18,8 @@ sed -i "s/0\.0\.0/${tag}/g" pyproject.toml
 git add pyproject.toml
 sed -i "s/0\.0\.0/${tag}/g" src/gitted/__init__.py
 git add src/gitted/__init__.py
-sed -i "s/0\.0\.0/${tag}/g" sub-scripts/commons.sh
-git add sub-scripts/commons.sh
+sed -i "s/0\.0\.0/${tag}/g" sub-scripts/intro.sh
+git add sub-scripts/intro.sh
 git commit -m "version set to ${tag}"
 
 pip install --progress-bar=off uv
