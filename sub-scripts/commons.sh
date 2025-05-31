@@ -17,7 +17,7 @@ function title_it {
 }
 
 function warn_it {
-    printf '\e[38;5;196m%s\e[0m\n' "$@"
+    printf '\n\e[38;5;160m%s\e[0m\n' "$@"
 }
 
 function bash_it {
