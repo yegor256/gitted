@@ -7,9 +7,6 @@ set -ex -o pipefail
 tmp=$(pwd)
 base=$(realpath "$(dirname "$0")/..")
 
-rm -rf here
-git init here --initial-branch=master
-cd here || exit 1
+env "${base}/scripts/commit" --help 2>&1 | tee "${tmp}/log.txt"
 
-env "GITTED_TESTING=true" \
-    "${base}/scripts/pull" 2>&1 | tee "${tmp}/log.txt"
+grep 'Usage:' "${tmp}/log.txt"

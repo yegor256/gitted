@@ -29,4 +29,3 @@ cd .. || exit 1
 
 cd here || exit 1
 git log | grep 'start987'
-cd .. || exit 1

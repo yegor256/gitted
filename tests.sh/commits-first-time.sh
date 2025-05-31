@@ -20,4 +20,3 @@ cd .. || exit 1
 
 cd here || exit 1
 git log | grep 'fake-message9844'
-cd .. || exit 1

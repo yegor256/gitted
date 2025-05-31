@@ -27,11 +27,6 @@ function plural {
     fi
 }
 
-if ! git rev-parse --git-dir > /dev/null 2>&1; then
-    echo "Oops, this is not a Git repository"
-    exit 1
-fi
-
 base=$(dirname "$0")
 export base
 

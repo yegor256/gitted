@@ -1,0 +1,3 @@
+Usage: pull
+
+We pull from the upstream branch and then also from the upstream repository.

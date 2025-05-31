@@ -29,4 +29,3 @@ cd .. || exit 1
 cd there || exit 1
 git checkout master
 git log | grep 'fake-commit-message'
-cd .. || exit 1

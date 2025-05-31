@@ -1,0 +1,5 @@
+Usage: push [<message> | <branch>]
+
+You either provide a commit message or a name of the branch you push to. If the
+argument is a single integer, we treat it as a branch name. Everything else
+is treated as a plain message.

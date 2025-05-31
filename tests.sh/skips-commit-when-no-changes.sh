@@ -21,4 +21,3 @@ cd .. || exit 1
 
 cd here || exit 1
 test "$(git rev-list --count HEAD)" == 1
-cd .. || exit 1

@@ -12,6 +12,7 @@ path = [
     ".python-version",
     "uv.lock",
     "**.md",
+    "help/*.txt",
     "src/gitted.egg-info/**",
     "tests/__pycache__/**",
     "**/.DS_Store",

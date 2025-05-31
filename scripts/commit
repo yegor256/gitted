@@ -3,10 +3,13 @@
 # SPDX-License-Identifier: MIT
 
 # shellcheck disable=SC1091
+. "$(dirname "$0")/../sub-scripts/commons.sh"
+
+# shellcheck disable=SC1091
 . "$(dirname "$0")/../sub-scripts/intro.sh"
 
 # shellcheck disable=SC1091
-. "$(dirname "$0")/../sub-scripts/commons.sh"
+. "$(dirname "$0")/../sub-scripts/sanity.sh"
 
 if ! git status --porcelain | grep -q .; then
     echo "There is nothing to commit"
