@@ -17,7 +17,7 @@ if [ "$1" == '--help' ]; then
 fi
 
 if [ -z "${GITTED_INTRODUCED}" ]; then
-    printf "Gitted 0.0.0 (any issues or ideas, submit to https://github.com/yegor256/gitted)\n\n"
+    printf "Gitted 0.0.9 (any issues or ideas, submit to https://github.com/yegor256/gitted)\n\n"
     GITTED_INTRODUCED=true
     export GITTED_INTRODUCED
 fi
