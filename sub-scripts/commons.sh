@@ -13,7 +13,7 @@ if [ -n "${GITTED_VERBOSE}" ]; then
 fi
 
 function title_it {
-    printf '\n👉🏻 \e[1m%s\e[0m...\n' "$@"
+    printf '\n👉 \e[1m%s\e[0m...\n' "$@"
 }
 
 function warn_it {
