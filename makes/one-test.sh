@@ -30,5 +30,5 @@ if ! /bin/bash -c "cd \"${tmp}\" && exec \"${sh}\" > \"${log}\" 2>&1"; then
     exit 1
 fi
 if [ -z "${GITTED_BATCH}" ]; then
-    printf "👍🏻\n"
+    printf "👍\n"
 fi
