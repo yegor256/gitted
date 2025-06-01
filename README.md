@@ -3,6 +3,7 @@
 [![DevOps By Rultor.com](https://www.rultor.com/b/yegor256/gitted)](https://www.rultor.com/p/yegor256/gitted)
 
 [![make](https://github.com/yegor256/gitted/actions/workflows/make.yml/badge.svg)](https://github.com/yegor256/gitted/actions/workflows/make.yml)
+[![PyPI - Version](https://img.shields.io/pypi/v/gitted)][pip]
 [![PDD status](https://www.0pdd.com/svg?name=yegor256/gitted)](https://www.0pdd.com/p?name=yegor256/gitted)
 [![codecov](https://codecov.io/gh/yegor256/gitted/graph/badge.svg?token=FT945WCK1K)](https://codecov.io/gh/yegor256/gitted)
 [![Hits-of-Code](https://hitsofcode.com/github/yegor256/gitted)](https://hitsofcode.com/view/github/yegor256/gitted)
