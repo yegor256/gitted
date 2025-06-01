@@ -2,14 +2,10 @@
 # SPDX-FileCopyrightText: Copyright (c) 2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
-# shellcheck disable=SC1091
-. "$(dirname "$0")/../sub-scripts/commons.sh"
+set -e -o pipefail
 
 # shellcheck disable=SC1091
-. "$(dirname "$0")/../sub-scripts/intro.sh"
-
-# shellcheck disable=SC1091
-. "$(dirname "$0")/../sub-scripts/sanity.sh"
+. "$(dirname "$0")/../sub-scripts/all.sh"
 
 name=$1
 if [ -z "${name}" ]; then
@@ -18,11 +14,14 @@ if [ -z "${name}" ]; then
 fi
 
 # shellcheck disable=SC2154
+title_it "Checking out the origin/${master} branch"
+# shellcheck disable=SC2154
 bash_it "${GIT_BIN}" checkout "${master}"
 
 # shellcheck disable=SC2154
 "${base}/pull"
 
+title_it "Showing the current status"
 bash_it "${GIT_BIN}" status
 
 title_it "Checking out the origin/${name} branch"

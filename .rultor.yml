@@ -9,9 +9,11 @@ assets:
 install: |
   pdd -f /dev/null
   pip install --progress-bar=off -r requirements.txt
+  pip install --progress-bar=off uv
 release:
   pre: false
   script: |-
+    GITTED_BATCH=true GITTED_TESTING=true make -e
     ./release.sh "${tag}" "$(cat ../token.txt)"
 merge:
   script: |-
