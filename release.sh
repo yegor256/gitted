@@ -28,7 +28,9 @@ for f in "${versioned[@]}"; do
     sed -i "s/0\.0\.0/${tag}/g" "${f}"
     git add "${f}"
 done
-git commit --no-verify -m "version set to ${tag}"
+if [ -n "${token}" ]; then
+    git commit --no-verify -m "version set to ${tag}"
+fi
 
 while IFS= read -r f; do
     n=$(basename "${f}")
@@ -36,7 +38,9 @@ while IFS= read -r f; do
     printf '%s=%s(cat << EOT\n%s\nEOT\n)\n\n%s' "help_${n}" "\$" "$(cat "${f}")" "$(cat "${base}/sub-scripts/intro.sh")" > "${base}/sub-scripts/intro.sh"
 done < <(find help -type f -name '*.txt')
 git add "${base}/sub-scripts/intro.sh"
-git commit --no-verify -m "help messages moved into the intro.sh"
+if [ -n "${token}" ]; then
+    git commit --no-verify -m "help messages moved into the intro.sh"
+fi
 
 pip install --progress-bar=off uv
 GITTED_BATCH=true GITTED_TESTING=true make -e
