@@ -7,6 +7,9 @@ set -e -o pipefail
 # This script is called by RULTOR from .rultor.yml
 
 tag=$1
+if [ -z "${tag}" ]; then
+    tag=0.0.0
+fi
 token=$2
 
 base=$(dirname "$0")
@@ -55,9 +58,12 @@ while IFS= read -r f; do
 done < <(find "${base}/scripts" -type f)
 
 uv --color=never build --no-build-logs
-if [ -n "${token}" ]; then
-    uv --color=never run python -m twine upload dist/* -u __token__ -p "${token}"
-else
+if [ -z "${token}" ]; then
     echo "The token is not provided, can't release"
     exit 1
 fi
+if [ "${tag}" == "0.0.0" ]; then
+    echo "The tag is not valid (${tag}), can't release"
+    exit 1
+fi
+uv --color=never run python -m twine upload dist/* -u __token__ -p "${token}"
