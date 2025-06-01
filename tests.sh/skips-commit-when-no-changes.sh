@@ -20,4 +20,4 @@ git commit --no-verify -am 'abc'
 cd .. || exit 1
 
 cd here || exit 1
-test "$(git rev-list --count HEAD)" == 1
+test "$(git rev-list --count HEAD)" = 1

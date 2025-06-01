@@ -4,7 +4,7 @@
 
 set -e -o pipefail
 
-if [ "$1" == '--help' ]; then
+if [ "$1" = '--help' ]; then
     cmd=$(basename "$0")
     var="help_${cmd}"
     help=${!var}

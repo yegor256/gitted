@@ -12,7 +12,7 @@ git init there --initial-branch=master
 cd there || exit 1
 touch hello.txt
 git add hello.txt
-git config user.email "jeff@zerocrac.com"
+git config user.email "jeff@zerocracy.com"
 git config user.name "Jeff Lebowski"
 git commit --no-verify -am start987
 cd .. || exit 1

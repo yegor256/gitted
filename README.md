@@ -55,14 +55,14 @@ To make it work, define the `OPENAI_API_KEY` environment variable with the
 
 ## Conventions
 
-In order to work smoothly, you have to respect a few conventions:
+In order to work smoothly, you must respect a few conventions:
 
 * Branch names are always integers, equal to GitHub issue numbers
 * The main branch is `master`
 * All commits are GPG-signed, if you have a key ([how?][gpg])
 * The `origin` is the fork, while the `upstream` is the main repo ([why?][fork])
 
-Maybe in future versions we'll make these configurable.
+Perhaps in future versions we'll make these configurable.
 However, at the moment, that's what we have.
 
 ## How to Contribute
