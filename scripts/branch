@@ -2,14 +2,10 @@
 # SPDX-FileCopyrightText: Copyright (c) 2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
-# shellcheck disable=SC1091
-. "$(dirname "$0")/../sub-scripts/commons.sh"
+set -e -o pipefail
 
 # shellcheck disable=SC1091
-. "$(dirname "$0")/../sub-scripts/intro.sh"
-
-# shellcheck disable=SC1091
-. "$(dirname "$0")/../sub-scripts/sanity.sh"
+. "$(dirname "$0")/../sub-scripts/all.sh"
 
 name=$1
 if [ -z "${name}" ]; then

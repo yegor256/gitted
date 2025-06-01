@@ -34,12 +34,10 @@ done < <(find help -type f -name '*.txt')
 while IFS= read -r f; do
     temp=$(mktemp)
     while IFS= read -r line; do
-        if [[ "${line}" =~ commons\.sh ]]; then
-            cat sub-scripts/commons.sh
-        elif [[ "${line}" =~ intro\.sh ]]; then
-            cat sub-scripts/intro.sh
-        elif [[ "${line}" =~ sanity\.sh ]]; then
-            cat sub-scripts/sanity.sh
+        if [[ "${line}" =~ all\.sh ]]; then
+            while IFS= read -r sub; do
+                cat "${sub}"
+            done < <(find "$(dirname "$0")" -type f -name '*.sh' -not -name "all.sh")
         else
             echo "${line}"
         fi
