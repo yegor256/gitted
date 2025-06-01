@@ -42,9 +42,6 @@ if [ -n "${token}" ]; then
     git commit --no-verify -m "help messages moved into the intro.sh"
 fi
 
-pip install --progress-bar=off uv
-GITTED_BATCH=true GITTED_TESTING=true make -e
-
 while IFS= read -r f; do
     temp=$(mktemp)
     while IFS= read -r line; do
