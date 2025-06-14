@@ -29,12 +29,7 @@ fi
 if [ -e .git/modules ]; then
     subs=$(grep -c '^\[submodule' .gitmodules)
     title_it "Updating $(plural "${subs}" 'submodule') first..."
-    while true; do
-        bash_it "${GIT_BIN}" submodule update --remote && break
-        if [ -n "${GITTED_TESTING}" ]; then
-            exit 1
-        fi
-    done
+    retry_command "Updating submodules" "${GIT_BIN} submodule update --remote"
 fi
 
 inc=$(${GIT_BIN} status --porcelain | grep -c '^??' || true)
@@ -56,19 +51,7 @@ fi
 
 # shellcheck disable=SC2154
 if git ls-remote --exit-code origin "refs/heads/${master}" > /dev/null 2>&1; then
-    attempt=1
-    max=10
-    while true; do
-        title_it "Pulling from origin/${branch} (attempt no.${attempt}/${max})"
-        bash_it "${GIT_BIN}" pull origin "${branch}" && break
-        if [ -n "${GITTED_TESTING}" ]; then
-            exit 1
-        fi
-        attempt=$((attempt + 1))
-        if [ "${attempt}" -gt "${max}" ]; then
-            exit 1
-        fi
-    done
+    retry_command "Pulling from origin/${branch}" "${GIT_BIN} pull origin ${branch}"
 fi
 
 trap - EXIT
