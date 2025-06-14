@@ -10,8 +10,12 @@ set -e -o pipefail
 # shellcheck disable=SC2154
 "${base}/pull" "$*"
 
-# shellcheck disable=SC2154
-"${base}/commit" "$*"
+if git status --porcelain | grep -q .; then
+    # shellcheck disable=SC2154
+    "${base}/commit" "$*"
+else
+    title_it "Nothing to commit, proceeding with push"
+fi
 
 branch=$(git symbolic-ref HEAD --short)
 
