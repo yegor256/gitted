@@ -15,16 +15,4 @@ set -e -o pipefail
 
 branch=$(git symbolic-ref HEAD --short)
 
-attempt=1
-max=10
-while true; do
-    title_it "Pushing to origin/${branch} (attempt no.${attempt}/${max})"
-    bash_it "${GIT_BIN}" push origin "${branch}" && break
-    if [ -n "${GITTED_TESTING}" ]; then
-        exit 1
-    fi
-    attempt=$((attempt + 1))
-    if [ "${attempt}" -gt "${max}" ]; then
-        exit 1
-    fi
-done
+retry_command "Pushing to origin/${branch}" "${GIT_BIN} push origin ${branch}"

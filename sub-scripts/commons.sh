@@ -31,6 +31,26 @@ function plural {
     fi
 }
 
+function retry_command {
+    local message="$1"
+    local cmd="$2"
+    local max_attempts="${3:-10}"
+    local attempt=1
+
+    while (( attempt <= max_attempts )); do
+        title_it "${message} (attempt no.${attempt}/${max_attempts})"
+        bash_it $cmd && return 0
+        if [ -n "${GITTED_TESTING}" ]; then
+            exit 1
+        fi
+        attempt=$(( attempt + 1 ))
+        sleep 1
+    done
+
+    echo "ERROR: Command failed after ${max_attempts} attempts: ${cmd}"
+    exit 1
+}
+
 base=$(dirname "$0")
 export base
 
