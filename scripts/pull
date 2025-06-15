@@ -27,7 +27,6 @@ if ! "${GIT_BIN}" rev-parse --abbrev-ref --symbolic-full-name '@{u}' >/dev/null 
 fi
 
 if [ -e .git/modules ]; then
-    subs=$(grep -c '^\[submodule' .gitmodules)
     retry_command "Updating submodules" "${GIT_BIN} submodule update --remote"
 fi
 

@@ -36,18 +36,16 @@ function retry_command {
     local cmd="$2"
     local max_attempts="${3:-10}"
     local attempt=1
-
     while (( attempt <= max_attempts )); do
         title_it "${message} (attempt no.${attempt}/${max_attempts})"
-        bash_it $cmd && return 0
+        bash_it "$cmd" && return 0
         if [ -n "${GITTED_TESTING}" ]; then
             exit 1
         fi
         attempt=$(( attempt + 1 ))
         sleep 1
     done
-
-    echo "ERROR: Command failed after ${max_attempts} attempts: ${cmd}"
+    warn_it "Command failed after ${max_attempts} attempts: ${cmd}"
     exit 1
 }
 
