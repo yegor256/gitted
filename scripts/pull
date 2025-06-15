@@ -28,7 +28,6 @@ fi
 
 if [ -e .git/modules ]; then
     subs=$(grep -c '^\[submodule' .gitmodules)
-    title_it "Updating $(plural "${subs}" 'submodule') first..."
     retry_command "Updating submodules" "${GIT_BIN} submodule update --remote"
 fi
 
