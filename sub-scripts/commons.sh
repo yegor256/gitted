@@ -38,7 +38,7 @@ function retry_command {
     local attempt=1
     while (( attempt <= max_attempts )); do
         title_it "${message} (attempt no.${attempt}/${max_attempts})"
-        bash_it "$cmd" && return 0
+        eval "$cmd" && return 0
         if [ -n "${GITTED_TESTING}" ]; then
             exit 1
         fi
