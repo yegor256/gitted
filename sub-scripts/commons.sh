@@ -34,10 +34,10 @@ function plural {
 function retry_it {
     local message="$1"
     local cmd="$2"
-    local max_attempts="${3:-10}"
+    local max="${3:-10}"
     local attempt=1
-    while (( attempt <= max_attempts )); do
-        title_it "${message} (attempt no.${attempt}/${max_attempts})"
+    while (( attempt <= max )); do
+        title_it "${message} (attempt no.${attempt}/${max})"
         eval "$cmd" && return 0
         if [ -n "${GITTED_TESTING}" ]; then
             exit 1
@@ -45,7 +45,7 @@ function retry_it {
         attempt=$(( attempt + 1 ))
         sleep 1
     done
-    warn_it "Command failed after ${max_attempts} attempts: ${cmd}"
+    warn_it "Command failed after ${max} attempts: ${cmd}"
     exit 1
 }
 
