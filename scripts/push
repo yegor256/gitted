@@ -15,4 +15,4 @@ set -e -o pipefail
 
 branch=$(git symbolic-ref HEAD --short)
 
-retry_command "Pushing to origin/${branch}" "bash_it ${GIT_BIN} push origin ${branch}"
+retry_it "Pushing to origin/${branch}" "bash_it ${GIT_BIN} push origin ${branch}"

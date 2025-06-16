@@ -31,7 +31,7 @@ function plural {
     fi
 }
 
-function retry_command {
+function retry_it {
     local message="$1"
     local cmd="$2"
     local max_attempts="${3:-10}"
