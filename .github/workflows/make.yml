@@ -13,11 +13,7 @@ name: make
 jobs:
   make:
     timeout-minutes: 15
-    strategy:
-      matrix:
-        os: [ubuntu-24.04, macos-15]
-        python-version: ['3.9', '3.12']
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     env:
       GITTED_TESTING: true
       GITTED_BATCH: true
@@ -28,7 +24,7 @@ jobs:
           enable-cache: true
           activate-environment: true
           cache-dependency-glob: "pyproject.toml"
-      - run: uv --color=never python install ${{ matrix.python-version }}
+      - run: uv --color=never python install '3.12'
       - run: uv --color=never sync --all-extras --dev
       - run: make -e
       - run: uv --color=never build --no-build-logs

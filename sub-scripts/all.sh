@@ -4,7 +4,11 @@
 
 set -e -o pipefail
 
-while IFS= read -r f; do
-    # shellcheck disable=SC1090
-    . "${f}"
-done < <(find "$(dirname "$0")/../sub-scripts" -type f -name '*.sh' -not -name "all.sh")
+scripts="$(dirname "$0")/../sub-scripts"
+
+# shellcheck disable=SC1090
+. "${scripts}/intro.sh"
+# shellcheck disable=SC1090
+. "${scripts}/commons.sh"
+# shellcheck disable=SC1090
+. "${scripts}/sanity.sh"
