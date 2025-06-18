@@ -52,7 +52,17 @@ function retry_it {
 base=$(dirname "$0")
 export base
 
-master=master
+branches="$(git branch --format='%(refname:short)')"
+if [ -z "${branches}" ]; then
+    master="$(git symbolic-ref --short HEAD 2>/dev/null || exit 1)"
+elif echo "$branches" | grep -qx 'master'; then
+    master=master
+elif echo "$branches" | grep -qx 'main'; then
+    master=main
+else
+    warn_it "Neither 'master' nor 'main' branch found."
+    exit 1
+fi
 export master
 
 if [ -z "${GIT_BIN}" ]; then
