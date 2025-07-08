@@ -54,13 +54,23 @@ if git ls-remote --exit-code origin "refs/heads/${master}" > /dev/null 2>&1; the
     retry_it "Pulling from origin/${branch}" "bash_it ${GIT_BIN} pull origin ${branch}"
 fi
 
+if ${GIT_BIN} remote | cut -f1 -d ' ' | grep upstream; then
+    if [ "${branch}" != "${master}" ]; then
+        title_it "Checking out the origin/${master} branch"
+        bash_it "${GIT_BIN}" checkout "${master}"
+    fi
+    title_it "Pulling from upstream"
+    bash_it "${GIT_BIN}" pull upstream "${master}"
+    if [ "${branch}" != "${master}" ]; then
+        title_it "Checking out the origin/${branch} branch"
+        bash_it "${GIT_BIN}" checkout "${branch}"
+        title_it "Merging ${master} into ${branch}"
+        bash_it "${GIT_BIN}" merge "${master}"
+    fi
+fi
+
 trap - EXIT
 if [ "${stashed}" == 'yes' ]; then
     title_it "Applying the changes back"
     bash_it "${GIT_BIN}" stash apply
-fi
-
-if ${GIT_BIN} remote | cut -f1 -d ' ' | grep upstream; then
-    title_it "Pulling from upstream"
-    ${GIT_BIN} pull upstream "${master}"
 fi
