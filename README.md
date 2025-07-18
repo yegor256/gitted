@@ -58,7 +58,7 @@ To make it work, define the `OPENAI_API_KEY` environment variable with the
 
 In order to work smoothly, you must respect a few conventions:
 
-* Branch names are always integers, equal to GitHub issue numbers
+* Branch names are always integers, equal to GitHub issue numbers ([why?][nums])
 * All commits are GPG-signed, if you have a key ([how?][gpg])
 * The `origin` is the fork, while the `upstream` is the main repo ([why?][fork])
 
@@ -87,3 +87,4 @@ If it doesn't, submit a bug report.
 [fork]: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/configuring-a-remote-repository-for-a-fork
 [gpg]: https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits
 [fork2]: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo
+[nums]: https://www.yegor256.com/2014/04/15/github-guidelines.html
