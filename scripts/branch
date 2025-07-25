@@ -8,8 +8,8 @@ set -e -o pipefail
 . "$(dirname "$0")/../sub-scripts/all.sh"
 
 name=$1
-if [ -z "${name}" ]; then
-    warn_it "Use it like this: 'branch 42', where 42 is the name of the branch and GitHub issue number"
+if ! [[ "${name}" =~ ^[1-9][0-9]*$ ]]; then
+    warn_it "Branch name must be a positive integer (GitHub issue number), got '${name}'"
     exit 1
 fi
 
