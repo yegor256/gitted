@@ -7,19 +7,14 @@ set -ex -o pipefail
 tmp=$(pwd)
 base=$(realpath "$(dirname "$0")/..")
 
-rm -rf remote_repo
-git init remote_repo --initial-branch=master
-cd remote_repo || exit 1
-git config user.email "remote@zerocracy.com"
-git config user.name "Remote Author"
+rm -rf repo
+git init repo
+cd repo || exit 1
+git config user.email "jeff@zerocracy.com"
+git config user.name "Jeff Lebowski"
 touch initial.txt
 git add initial.txt
 git commit --no-verify -am "initial commit"
-cd .. || exit 1
-
-rm -rf local_repo
-git clone "file://${tmp}/remote_repo" local_repo
-cd local_repo || exit 1
 git branch 42
 
 exit_code=0
