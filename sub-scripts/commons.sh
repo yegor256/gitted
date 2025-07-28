@@ -20,6 +20,11 @@ function warn_it {
     printf '\n⚠️ \e[38;5;160m%s\e[0m\n' "$@"
 }
 
+function fail_it {
+    warn_it "$@"
+    exit 1
+}
+
 function bash_it {
     printf '%q ' "$@" | /bin/bash -x
 }
@@ -45,8 +50,7 @@ function retry_it {
         attempt=$(( attempt + 1 ))
         sleep 1
     done
-    warn_it "Command failed after ${max} attempts: ${cmd}"
-    exit 1
+    fail_it "Command failed after ${max} attempts: ${cmd}"
 }
 
 base=$(dirname "$0")
@@ -60,8 +64,7 @@ elif echo "$branches" | grep -qx 'master'; then
 elif echo "$branches" | grep -qx 'main'; then
     master=main
 else
-    warn_it "Neither 'master' nor 'main' branch found."
-    exit 1
+    fail_it "Neither 'master' nor 'main' branch found."
 fi
 export master
 

@@ -14,8 +14,7 @@ fi
 
 branch=$("${GIT_BIN}" symbolic-ref HEAD --short)
 if [ -z "${branch}" ]; then
-    warn_it "Something is wrong, the current branch was not detected"
-    exit 1
+    fail_it "Something is wrong, the current branch was not detected"
 fi
 
 if ! "${GIT_BIN}" rev-parse --abbrev-ref --symbolic-full-name '@{u}' >/dev/null 2>&1; then
