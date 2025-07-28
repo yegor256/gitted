@@ -8,8 +8,7 @@ set -e -o pipefail
 . "$(dirname "$0")/../sub-scripts/all.sh"
 
 if ! git status --porcelain | grep -q .; then
-    warn_it "There is nothing to commit"
-    exit 1
+    fail_it "There is nothing to commit"
 fi
 
 title_it 'Showing status'
@@ -51,12 +50,10 @@ if [ -n "${OPENAI_API_KEY}" ]; then
         export PYTHONPATH
     fi
     if ! python3 -c 'import gitted' >/dev/null 2>&1; then
-        warn_it 'The "gitted" Python package is not installed, run "pip install gitted"'
-        exit 1
+        fail_it 'The "gitted" Python package is not installed, run "pip install gitted"'
     fi
     if ! python3 -c 'import openai' >/dev/null 2>&1; then
-        warn_it 'Something is wrong with the installation of the "gitted" Python package, try "pip install gitted"'
-        exit 1
+        fail_it 'Something is wrong with the installation of the "gitted" Python package, try "pip install gitted"'
     fi
     py=$(cat << 'EOT'
 import sys

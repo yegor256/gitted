@@ -5,6 +5,5 @@
 set -e -o pipefail
 
 if ! git rev-parse --git-dir > /dev/null 2>&1; then
-    warn_it "Oops, this is not a Git repository"
-    exit 1
+    fail_it "Oops, this is not a Git repository"
 fi
