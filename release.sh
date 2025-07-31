@@ -7,7 +7,7 @@ set -e -o pipefail
 # enable optional GPG signing
 SIGN_FLAG=""
 if [ "$GPG_SIGN" = "true" ]; then
-  SIGN_FLAG="-S"
+    SIGN_FLAG="-S"
 fi
 # ——————————————————————————————
 
