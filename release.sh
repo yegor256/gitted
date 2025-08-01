@@ -3,6 +3,14 @@
 # SPDX-License-Identifier: MIT
 
 set -e -o pipefail
+# ——————————————————————————————
+# enable optional GPG signing
+SIGN_FLAG=""
+if [ "$GPG_SIGN" = "true" ]; then
+    SIGN_FLAG="-S"
+fi
+# ——————————————————————————————
+
 
 # This script is called by RULTOR from .rultor.yml
 
@@ -24,12 +32,13 @@ versioned=(
     "${base}/src/gitted/__init__.py"
     "${base}/sub-scripts/intro.sh"
 )
+SED=$(command -v gsed || command -v sed)
 for f in "${versioned[@]}"; do
-    sed -i "s/0\.0\.0/${tag}/g" "${f}"
+    "${SED}" -i "s/0\.0\.0/${tag}/g" "${f}"
     git add "${f}"
 done
 if [ -n "${token}" ]; then
-    git commit --no-verify -m "version set to ${tag}"
+    git commit $SIGN_FLAG --no-verify -m "version set to ${tag}"
 fi
 
 while IFS= read -r f; do
@@ -39,7 +48,7 @@ while IFS= read -r f; do
 done < <(find help -type f -name '*.txt')
 git add "${base}/sub-scripts/intro.sh"
 if [ -n "${token}" ]; then
-    git commit --no-verify -m "help messages moved into the intro.sh"
+    git commit $SIGN_FLAG --no-verify -m "help messages moved into the intro.sh"
 fi
 
 while IFS= read -r f; do
