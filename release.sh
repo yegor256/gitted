@@ -32,8 +32,9 @@ versioned=(
     "${base}/src/gitted/__init__.py"
     "${base}/sub-scripts/intro.sh"
 )
+SED=$(command -v gsed || command -v sed)
 for f in "${versioned[@]}"; do
-    gsed -i "s/0\.0\.0/${tag}/g" "${f}"
+    "${SED}" -i "s/0\.0\.0/${tag}/g" "${f}"
     git add "${f}"
 done
 if [ -n "${token}" ]; then
