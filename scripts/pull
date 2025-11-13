@@ -17,7 +17,7 @@ if [ -z "${branch}" ]; then
     fail_it "Something is wrong, the current branch was not detected"
 fi
 
-if ! "${GIT_BIN}" rev-parse --abbrev-ref --symbolic-full-name '@{u}' >/dev/null 2>&1; then
+if ! "${GIT_BIN}" rev-parse '@{u}' >/dev/null 2>&1; then
     if git rev-parse --verify HEAD > /dev/null 2>&1; then
         title_it "The upstream is not configured for the ${branch} branch, setting it to origin/${branch}"
         bash_it "${GIT_BIN}" fetch
