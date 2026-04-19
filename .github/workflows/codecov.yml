@@ -20,7 +20,7 @@ jobs:
       - run: uv python install 3.12
       - run: uv sync --all-extras --dev
       - run: uv run pytest tests/ -v --cov=src/gitted --cov-report=xml --cov-report=term
-      - uses: codecov/codecov-action@v5
+      - uses: codecov/codecov-action@v6
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage.xml
