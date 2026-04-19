@@ -32,6 +32,14 @@ fi
 if [ -e .git/modules ]; then
     subs=$(grep -c '^\[submodule' .gitmodules)
     title_it "Updating $(plural "${subs}" 'submodule') first..."
+    bash_it "${GIT_BIN}" submodule deinit -f .
+    retry_it "Initializing submodules" "bash_it ${GIT_BIN} submodule update --init"
+    while read -r key path; do
+        name=${key#submodule.}
+        name=${name%.path}
+        bash_it "${GIT_BIN}" config "submodule.${name}.ignore" all
+        (cd "${path}" && bash_it "${GIT_BIN}" reset --hard)
+    done < <("${GIT_BIN}" config --file .gitmodules --get-regexp '^submodule\..*\.path$')
     retry_it "Updating submodules" "bash_it ${GIT_BIN} submodule update --remote"
 fi
 
