@@ -19,4 +19,19 @@ fi
 
 branch=$(git symbolic-ref HEAD --short)
 
-retry_it "Pushing to origin/${branch}" "bash_it ${GIT_BIN} push origin ${branch}"
+max=10
+attempt=1
+while (( attempt <= max )); do
+    title_it "Pushing to origin/${branch} (attempt no.${attempt}/${max})"
+    if bash_it "${GIT_BIN}" push origin "${branch}"; then
+        exit 0
+    fi
+    attempt=$(( attempt + 1 ))
+    if (( attempt > max )); then
+        break
+    fi
+    title_it "Push was rejected, rebasing on origin/${branch} before retrying"
+    bash_it "${GIT_BIN}" pull --rebase origin "${branch}"
+done
+
+fail_it "Failed to push to origin/${branch} after ${max} attempts"
