@@ -120,6 +120,32 @@ index e69de29..d95f3ad 100644
         with pytest.raises(ValueError, match="Invalid diff chunk format"):
             is_summarizable_chunk(diff)
 
+    def test_exclude_large_lockfile_chunk(self):
+        header = (
+            "diff --git a/package-lock.json b/package-lock.json\n"
+            "index e69de29..d95f3ad 100644\n"
+            "--- a/package-lock.json\n"
+            "+++ b/package-lock.json\n"
+            "@@ -0,0 +1,600 @@\n"
+        )
+        body = "\n".join(f'+  "dep{i}": "^1.0.0",' for i in range(600))
+        diff = header + body + "\n"
+        result = is_summarizable_chunk(diff)
+        assert not result
+
+    def test_include_small_chunk(self):
+        header = (
+            "diff --git a/src/a.py b/src/a.py\n"
+            "index e69de29..d95f3ad 100644\n"
+            "--- a/src/a.py\n"
+            "+++ b/src/a.py\n"
+            "@@ -0,0 +1,10 @@\n"
+        )
+        body = "\n".join(f"+line {i}" for i in range(10))
+        diff = header + body + "\n"
+        result = is_summarizable_chunk(diff)
+        assert result
+
 
 class TestPrepareDiff:
     def test_return_empty_string_for_empty_input(self):
@@ -176,6 +202,28 @@ Binary files a/image2.png and b/image2.png differ
 """
         result = prepare_diff(diff)
         assert result == ""
+
+    def test_drop_large_chunk_keep_small_ones(self):
+        small = (
+            "diff --git a/src/a.py b/src/a.py\n"
+            "index e69de29..d95f3ad 100644\n"
+            "--- a/src/a.py\n"
+            "+++ b/src/a.py\n"
+            "@@ -0,0 +1,1 @@\n"
+            "+print('hi')\n"
+        )
+        big_header = (
+            "diff --git a/package-lock.json b/package-lock.json\n"
+            "index e69de29..d95f3ad 100644\n"
+            "--- a/package-lock.json\n"
+            "+++ b/package-lock.json\n"
+            "@@ -0,0 +1,600 @@\n"
+        )
+        big_body = "\n".join(f'+  "dep{i}": "^1.0.0",' for i in range(600))
+        diff = small + big_header + big_body + "\n"
+        result = prepare_diff(diff)
+        assert 'a/src/a.py' in result
+        assert 'package-lock.json' not in result
 
 
 class TestDiff2Msg:
