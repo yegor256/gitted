@@ -6,10 +6,14 @@ import re
 from openai import OpenAI
 
 
+MAX_CHUNK_LINES = 200
+
+
 def is_summarizable_chunk(chunk: str) -> bool:
     """
-    Checks if diff chunk should be included in prompt. Skips binary files and
-    .svg files.
+    Checks if diff chunk should be included in prompt. Skips binary files,
+    .svg files, and chunks whose total line count exceeds
+    ``MAX_CHUNK_LINES`` (e.g. ``package-lock.json``).
 
     Args:
         chunk: Git diff chunk starting with "diff --git a/... b/..."
@@ -33,6 +37,8 @@ def is_summarizable_chunk(chunk: str) -> bool:
     _, extension = os.path.splitext(filepath)
     skip_extensions = {'.svg'}
     if extension in skip_extensions:
+        return False
+    if chunk.count('\n') > MAX_CHUNK_LINES:
         return False
     return True
 
