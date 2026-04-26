@@ -102,7 +102,7 @@ Don't even finish it with a dot, just give me a single sentence.
 def generate_commit_message(diff, msg=''):
     diff = prepare_diff(diff)
     if not diff.strip():
-        return 'No changes'
+        return msg if msg.strip() else 'No changes'
     if os.environ.get('GITTED_TESTING'):
         return msg
     prompt = prepare_prompt(diff, msg)

@@ -233,6 +233,23 @@ class TestDiff2Msg:
         result = generate_commit_message('   ')
         assert result == 'No changes'
 
+    def test_falls_back_to_user_message_when_diff_is_empty(self):
+        result = generate_commit_message('', 'manual message')
+        assert result == 'manual message'
+
+    def test_falls_back_to_user_message_when_all_chunks_are_filtered(self):
+        header = (
+            "diff --git a/package-lock.json b/package-lock.json\n"
+            "index e69de29..d95f3ad 100644\n"
+            "--- a/package-lock.json\n"
+            "+++ b/package-lock.json\n"
+            "@@ -0,0 +1,600 @@\n"
+        )
+        body = "\n".join(f'+  "dep{i}": "^1.0.0",' for i in range(600))
+        diff = header + body + "\n"
+        result = generate_commit_message(diff, 'manual message')
+        assert result == 'manual message'
+
     def test_testing_mode(self, monkeypatch):
         monkeypatch.setenv('GITTED_TESTING', 'true')
         diff = """\
