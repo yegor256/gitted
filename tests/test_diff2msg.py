@@ -353,3 +353,152 @@ index 1234567..abcdefg 100644
         assert result == 'Fix bug in authentication'
         assert len(captured_messages) == 1
         assert 'fix auth' in captured_messages[0]
+
+    def test_retries_on_api_timeout_then_succeeds(self, monkeypatch):
+        import time
+        import httpx
+        from openai import APITimeoutError
+        monkeypatch.delenv('GITTED_TESTING', raising=False)
+        sleeps = []
+        monkeypatch.setattr(time, 'sleep', lambda s: sleeps.append(s))
+        attempts = {'count': 0}
+
+        class MockMessage:
+            def __init__(self):
+                self.content = 'Recovered after retry'
+
+        class MockChoice:
+            def __init__(self):
+                self.message = MockMessage()
+
+        class MockResponse:
+            def __init__(self):
+                self.choices = [MockChoice()]
+
+        class MockCompletions:
+            def create(self, **kwargs):
+                attempts['count'] += 1
+                if attempts['count'] < 3:
+                    raise APITimeoutError(
+                        request=httpx.Request(
+                            'POST',
+                            'https://api.openai.com/v1/chat/completions'
+                        )
+                    )
+                return MockResponse()
+
+        class MockChat:
+            def __init__(self):
+                self.completions = MockCompletions()
+
+        class MockClient:
+            def __init__(self):
+                self.chat = MockChat()
+
+        monkeypatch.setattr('gitted.diff2msg.OpenAI', MockClient)
+        diff = """\
+diff --git a/test.py b/test.py
+new file mode 100644
+index 0000000..1234567
+--- /dev/null
++++ b/test.py
+@@ -0,0 +1 @@
++x = 1
+"""
+        result = generate_commit_message(diff)
+        assert result == 'Recovered after retry'
+        assert attempts['count'] == 3
+        assert len(sleeps) == 2
+
+    def test_retries_on_api_connection_error_then_succeeds(self, monkeypatch):
+        import time
+        import httpx
+        from openai import APIConnectionError
+        monkeypatch.delenv('GITTED_TESTING', raising=False)
+        monkeypatch.setattr(time, 'sleep', lambda s: None)
+        attempts = {'count': 0}
+
+        class MockMessage:
+            def __init__(self):
+                self.content = 'Fixed connection'
+
+        class MockChoice:
+            def __init__(self):
+                self.message = MockMessage()
+
+        class MockResponse:
+            def __init__(self):
+                self.choices = [MockChoice()]
+
+        class MockCompletions:
+            def create(self, **kwargs):
+                attempts['count'] += 1
+                if attempts['count'] < 2:
+                    raise APIConnectionError(
+                        request=httpx.Request(
+                            'POST',
+                            'https://api.openai.com/v1/chat/completions'
+                        )
+                    )
+                return MockResponse()
+
+        class MockChat:
+            def __init__(self):
+                self.completions = MockCompletions()
+
+        class MockClient:
+            def __init__(self):
+                self.chat = MockChat()
+
+        monkeypatch.setattr('gitted.diff2msg.OpenAI', MockClient)
+        diff = """\
+diff --git a/x.py b/x.py
+index e69de29..d95f3ad 100644
+--- a/x.py
++++ b/x.py
+@@ -0,0 +1 @@
++y = 2
+"""
+        result = generate_commit_message(diff)
+        assert result == 'Fixed connection'
+        assert attempts['count'] == 2
+
+    def test_raises_after_max_retries_exhausted(self, monkeypatch):
+        import time
+        import httpx
+        import pytest
+        from openai import APITimeoutError
+        monkeypatch.delenv('GITTED_TESTING', raising=False)
+        monkeypatch.setattr(time, 'sleep', lambda s: None)
+        attempts = {'count': 0}
+
+        class MockCompletions:
+            def create(self, **kwargs):
+                attempts['count'] += 1
+                raise APITimeoutError(
+                    request=httpx.Request(
+                        'POST',
+                        'https://api.openai.com/v1/chat/completions'
+                    )
+                )
+
+        class MockChat:
+            def __init__(self):
+                self.completions = MockCompletions()
+
+        class MockClient:
+            def __init__(self):
+                self.chat = MockChat()
+
+        monkeypatch.setattr('gitted.diff2msg.OpenAI', MockClient)
+        diff = """\
+diff --git a/z.py b/z.py
+index e69de29..d95f3ad 100644
+--- a/z.py
++++ b/z.py
+@@ -0,0 +1 @@
++z = 3
+"""
+        with pytest.raises(APITimeoutError):
+            generate_commit_message(diff)
+        assert attempts['count'] >= 2
