@@ -30,7 +30,11 @@ def is_summarizable_chunk(chunk: str) -> bool:
     if re.search(r'Binary files (.+) and (.+) differ', chunk, re.IGNORECASE):
         return False
     header = chunk.split('\n', 1)[0]
-    filenames = re.search(r'a/(.+) b/(.+)', header)
+    filenames = re.match(
+        r'^diff --git "a/(.+)" "b/(.+)"\s*$', header
+    ) or re.match(
+        r'^diff --git a/(.+) b/(.+)\s*$', header
+    )
     if not filenames:
         raise ValueError(
             "Invalid diff chunk format: " +

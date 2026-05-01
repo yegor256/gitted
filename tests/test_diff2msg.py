@@ -107,6 +107,34 @@ index e69de29..d95f3ad 100644
         result = is_summarizable_chunk(diff)
         assert result
 
+    def test_handle_quoted_filenames_with_unicode(self):
+        diff = (
+            'diff --git "a/eo-runtime/src/main/java/org/eolang/'
+            'EOmalloc$EOof$EO\\317\\206.java" '
+            '"b/eo-runtime/src/main/java/org/eolang/'
+            'EOmalloc$EOof$EO\\317\\206.java"\n'
+            'index e69de29..d95f3ad 100644\n'
+            '--- a/file.java\n'
+            '+++ b/file.java\n'
+            '@@ -0,0 +1 @@\n'
+            '+content\n'
+        )
+        result = is_summarizable_chunk(diff)
+        assert result
+
+    def test_exclude_quoted_svg_filename(self):
+        diff = (
+            'diff --git "a/dir/icon-\\317\\206.svg" '
+            '"b/dir/icon-\\317\\206.svg"\n'
+            'index e69de29..ca56cec 100644\n'
+            '--- a/dir/icon.svg\n'
+            '+++ b/dir/icon.svg\n'
+            '@@ -0,0 +1 @@\n'
+            '+<svg/>\n'
+        )
+        result = is_summarizable_chunk(diff)
+        assert not result
+
     def test_raise_error_when_header_is_invalid(self):
         import pytest
         diff = """\
