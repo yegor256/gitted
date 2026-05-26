@@ -17,6 +17,7 @@ function github_slug {
 
 function maybe_create_pull_request {
     local branch="$1"
+    # shellcheck disable=SC2154
     if [ "${branch}" == "${master}" ]; then
         return
     fi
