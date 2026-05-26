@@ -11,7 +11,7 @@ rm -rf shadow
 mkdir shadow
 for tool in awk basename cat chmod cp cut dirname grep gpg head ls mkdir mktemp mv printf rm sed sort tail tee touch tr wc which; do
     full=$(command -v "${tool}" || true)
-    if [ -n "${full}" ]; then
+    if [ -n "${full}" ] && [[ "${full}" == */* ]]; then
         ln -sf "${full}" "shadow/${tool}"
     fi
 done
