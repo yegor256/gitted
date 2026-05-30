@@ -44,15 +44,32 @@ if [ -n "${OPENAI_API_KEY}" ]; then
     else
         diff=$("${GIT_BIN}" diff --staged)
     fi
+    python=python3
+    if [ -n "${VIRTUAL_ENV:-}" ]; then
+        if command -v cygpath >/dev/null 2>&1; then
+            venv_python=$(cygpath -u "${VIRTUAL_ENV}\\Scripts\\python.exe")
+            if [ -x "${venv_python}" ]; then
+                python="${venv_python}"
+            fi
+        elif [ -x "${VIRTUAL_ENV}/bin/python" ]; then
+            python="${VIRTUAL_ENV}/bin/python"
+        fi
+    fi
     if [ -n "${GITTED_TESTING}" ]; then
         # shellcheck disable=SC2154
-        PYTHONPATH="${base}/../src:${PYTHONPATH}"
+        source_dir="${base}/../src"
+        path_sep=':'
+        if command -v cygpath >/dev/null 2>&1; then
+            source_dir=$(cygpath -w "${source_dir}")
+            path_sep=';'
+        fi
+        PYTHONPATH="${source_dir}${PYTHONPATH:+${path_sep}${PYTHONPATH}}"
         export PYTHONPATH
     fi
-    if ! python3 -c 'import gitted' >/dev/null 2>&1; then
+    if ! "${python}" -c 'import gitted' >/dev/null 2>&1; then
         fail_it 'The "gitted" Python package is not installed, run "pip install gitted"'
     fi
-    if ! python3 -c 'import openai' >/dev/null 2>&1; then
+    if ! "${python}" -c 'import openai' >/dev/null 2>&1; then
         fail_it 'Something is wrong with the installation of the "gitted" Python package, try "pip install gitted"'
     fi
     py=$(cat << 'EOT'
@@ -63,7 +80,7 @@ msg = sys.argv[1] if len(sys.argv) > 1 else ''
 print(generate_commit_message(diff, msg))
 EOT
     )
-    gpt=$(echo "${diff}" | python3 -c "${py}" "${msg}")
+    gpt=$(echo "${diff}" | "${python}" -c "${py}" "${msg}")
     msg="${prefix}${gpt}"
     printf "ChatGPT suggested: %s\n" "${gpt}"
 else
