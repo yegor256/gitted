@@ -31,6 +31,12 @@ dependencies = [
     "openai>=1.82.0",
 ]
 
+[project.optional-dependencies]
+mcp = ["mcp>=1.0.0; python_version >= '3.10'"]
+
+[project.scripts]
+gitted-mcp = "gitted.mcp_server:main"
+
 [tool.setuptools.packages.find]
 where = ["src"]
 
