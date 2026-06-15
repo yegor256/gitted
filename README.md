@@ -54,6 +54,21 @@ they will use ChatGPT to generate it, looking at the changes you've made.
 To make it work, define the `OPENAI_API_KEY` environment variable with the
 [OpenAI key].
 
+## MCP Server
+
+The same four commands are also exposed as an MCP server, so an AI agent
+can invoke `branch`, `commit`, `pull`, and `push` directly.
+Install the optional extra (requires Python 3.10 or newer)
+and run the entry point:
+
+```bash
+pip install 'gitted[mcp]'
+gitted-mcp
+```
+
+The agent talks to `gitted-mcp` over stdio, the same way it talks to any
+other MCP server.
+
 ## Conventions
 
 In order to work smoothly, you must respect a few conventions:
