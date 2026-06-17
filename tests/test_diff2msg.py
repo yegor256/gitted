@@ -338,6 +338,48 @@ index 0000000..1234567
         result = generate_commit_message(diff)
         assert result == 'Add new feature'
 
+    def test_model_overridden_by_env(self, monkeypatch):
+        monkeypatch.delenv('GITTED_TESTING', raising=False)
+        monkeypatch.setenv('GITTED_MODEL', 'llama3:8b')
+        captured = {}
+
+        class MockMessage:
+            def __init__(self):
+                self.content = 'ok'
+
+        class MockChoice:
+            def __init__(self):
+                self.message = MockMessage()
+
+        class MockResponse:
+            def __init__(self):
+                self.choices = [MockChoice()]
+
+        class MockCompletions:
+            def create(self, **kwargs):
+                captured['model'] = kwargs['model']
+                return MockResponse()
+
+        class MockChat:
+            def __init__(self):
+                self.completions = MockCompletions()
+
+        class MockClient:
+            def __init__(self):
+                self.chat = MockChat()
+
+        monkeypatch.setattr('gitted.diff2msg.OpenAI', MockClient)
+        diff = """\
+diff --git a/file.py b/file.py
+index 0000000..1111111 100644
+--- a/file.py
++++ b/file.py
+@@ -0,0 +1 @@
++x = 1
+"""
+        generate_commit_message(diff)
+        assert captured['model'] == 'llama3:8b'
+
     def test_openai_call_with_message(self, monkeypatch):
         monkeypatch.delenv('GITTED_TESTING', raising=False)
         captured_messages = []

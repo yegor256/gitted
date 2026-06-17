@@ -54,6 +54,12 @@ they will use ChatGPT to generate it, looking at the changes you've made.
 To make it work, define the `OPENAI_API_KEY` environment variable with the
 [OpenAI key].
 
+To use a different model, set `GITTED_MODEL` to its identifier; it defaults
+to `gpt-3.5-turbo`. To point at a different OpenAI-compatible endpoint
+(for example a local LLM such as Ollama or `llama.cpp` with the OpenAI
+shim, or any other proxy), set `OPENAI_BASE_URL` to the endpoint's URL;
+the `openai` Python client picks it up automatically.
+
 ## Conventions
 
 In order to work smoothly, you must respect a few conventions:

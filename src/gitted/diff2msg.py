@@ -10,6 +10,7 @@ from openai import APIConnectionError, APITimeoutError, OpenAI
 MAX_CHUNK_LINES = 200
 MAX_OPENAI_ATTEMPTS = 4
 INITIAL_BACKOFF_SECONDS = 1.0
+DEFAULT_MODEL = "gpt-3.5-turbo"
 
 
 def is_summarizable_chunk(chunk: str) -> bool:
@@ -114,11 +115,12 @@ def generate_commit_message(diff, msg=''):
         return msg
     prompt = prepare_prompt(diff, msg)
     client = OpenAI()
+    model = os.environ.get('GITTED_MODEL', DEFAULT_MODEL)
     delay = INITIAL_BACKOFF_SECONDS
     for attempt in range(1, MAX_OPENAI_ATTEMPTS + 1):
         try:
             response = client.chat.completions.create(
-                model="gpt-3.5-turbo",
+                model=model,
                 messages=[{"role": "user", "content": prompt}],
                 max_tokens=100,
                 temperature=0.7
