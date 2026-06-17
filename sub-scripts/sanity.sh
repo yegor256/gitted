@@ -26,8 +26,8 @@ IFS='.' read -r gitted_git_major gitted_git_minor _ <<< "${gitted_git_version_ra
 if ! [[ "${gitted_git_major}" =~ ^[0-9]+$ ]] || ! [[ "${gitted_git_minor}" =~ ^[0-9]+$ ]]; then
     gitted_sanity_fail "Failed to parse Git version '${gitted_git_version_raw}'"
 fi
-if (( gitted_git_major < GITTED_GIT_MIN_MAJOR )) || \
-    (( gitted_git_major == GITTED_GIT_MIN_MAJOR && gitted_git_minor < GITTED_GIT_MIN_MINOR )); then
+if [ "${gitted_git_major}" -lt "${GITTED_GIT_MIN_MAJOR}" ] || \
+    { [ "${gitted_git_major}" -eq "${GITTED_GIT_MIN_MAJOR}" ] && [ "${gitted_git_minor}" -lt "${GITTED_GIT_MIN_MINOR}" ]; }; then
     gitted_sanity_fail "Git version ${gitted_git_version_raw} is too old; gitted requires Git ${GITTED_GIT_MIN_MAJOR}.${GITTED_GIT_MIN_MINOR}.0 or higher"
 fi
 
