@@ -49,20 +49,9 @@ if [ ! "${inc}" == '0' ]; then
     bash_it "${GIT_BIN}" add .
 fi
 
-stashed=no
-if git rev-parse --verify HEAD > /dev/null 2>&1; then
-    if ! git diff --quiet || ! git diff --cached --quiet; then
-        trap "title_it 'Applying the changes back' && bash_it \${GIT_BIN} stash apply" EXIT
-        df=$(${GIT_BIN} status --porcelain | wc -l | xargs)
-        title_it "Stashing $(plural "${df}" 'file')"
-        bash_it "${GIT_BIN}" stash
-        stashed=yes
-    fi
-fi
-
 # shellcheck disable=SC2154
 if git ls-remote --exit-code origin "refs/heads/${master}" > /dev/null 2>&1; then
-    retry_it "Pulling from origin/${branch}" "bash_it ${GIT_BIN} pull origin ${branch}"
+    retry_it "Pulling from origin/${branch}" "bash_it ${GIT_BIN} pull --autostash origin ${branch}"
 fi
 
 if ${GIT_BIN} remote | cut -f1 -d ' ' | grep upstream; then
@@ -71,17 +60,11 @@ if ${GIT_BIN} remote | cut -f1 -d ' ' | grep upstream; then
         bash_it "${GIT_BIN}" checkout "${master}"
     fi
     title_it "Pulling from upstream"
-    bash_it "${GIT_BIN}" pull upstream "${master}"
+    bash_it "${GIT_BIN}" pull --autostash upstream "${master}"
     if [ "${branch}" != "${master}" ]; then
         title_it "Checking out the origin/${branch} branch"
         bash_it "${GIT_BIN}" checkout "${branch}"
         title_it "Merging ${master} into ${branch}"
         bash_it "${GIT_BIN}" merge "${master}"
     fi
-fi
-
-trap - EXIT
-if [ "${stashed}" == 'yes' ]; then
-    title_it "Applying the changes back"
-    bash_it "${GIT_BIN}" stash apply
 fi
