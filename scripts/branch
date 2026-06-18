@@ -30,13 +30,7 @@ bash_it "${GIT_BIN}" status
 title_it "Checking out the origin/${name} branch"
 bash_it "${GIT_BIN}" checkout -b "${name}"
 
-while true; do
-    title_it "Pushing to the origin/${name} branch"
-    bash_it "${GIT_BIN}" push origin "${name}" && break
-    if [ -n "${GITTED_TESTING}" ]; then
-        exit 1
-    fi
-done
+retry_it "Pushing to the origin/${name} branch" "bash_it ${GIT_BIN} push origin ${name}"
 
 title_it "Setting the upstream of the origin/${name} branch"
 bash_it "${GIT_BIN}" branch "--set-upstream-to=origin/${name}" "${name}"
