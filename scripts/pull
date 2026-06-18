@@ -50,8 +50,10 @@ if [ ! "${inc}" == '0' ]; then
 fi
 
 # shellcheck disable=SC2154
-if git ls-remote --exit-code origin "refs/heads/${master}" > /dev/null 2>&1; then
+if git ls-remote --exit-code origin "refs/heads/${branch}" > /dev/null 2>&1; then
     retry_it "Pulling from origin/${branch}" "bash_it ${GIT_BIN} pull --autostash origin ${branch}"
+else
+    title_it "The ${branch} branch does not exist at origin yet, skipping pull"
 fi
 
 if ${GIT_BIN} remote | cut -f1 -d ' ' | grep upstream; then
