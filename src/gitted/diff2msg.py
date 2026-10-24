@@ -10,7 +10,7 @@ from openai import APIConnectionError, APITimeoutError, OpenAI
 MAX_CHUNK_LINES = 200
 MAX_OPENAI_ATTEMPTS = 4
 INITIAL_BACKOFF_SECONDS = 1.0
-DEFAULT_MODEL = "gpt-3.5-turbo"
+DEFAULT_MODEL = "gpt-4o-mini"
 
 
 def is_summarizable_chunk(chunk: str) -> bool:
