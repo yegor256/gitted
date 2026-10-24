@@ -310,7 +310,7 @@ index e69de29..d95f3ad 100644
 
         class MockCompletions:
             def create(self, **kwargs):
-                assert kwargs['model'] == 'gpt-3.5-turbo'
+                assert kwargs['model'] == 'gpt-4o-mini'
                 assert kwargs['max_tokens'] == 100
                 assert kwargs['temperature'] == 0.7
                 return MockResponse()
