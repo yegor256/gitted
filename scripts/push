@@ -7,6 +7,58 @@ set -e -o pipefail
 # shellcheck disable=SC1091
 . "$(dirname "$0")/../sub-scripts/all.sh"
 
+function github_slug {
+    local remote="$1"
+    remote="${remote%.git}"
+    if [[ "${remote}" =~ github.com[:/]([^/]+)/([^/]+)$ ]]; then
+        printf '%s/%s' "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}"
+    fi
+}
+
+function maybe_create_pull_request {
+    local branch="$1"
+    # shellcheck disable=SC2154
+    if [ "${branch}" == "${master}" ]; then
+        return
+    fi
+    if ! command -v gh > /dev/null 2>&1; then
+        warn_it "GitHub CLI is not installed, skipping pull request creation"
+        return
+    fi
+    local origin
+    origin=$("${GIT_BIN}" remote get-url origin 2>/dev/null || true)
+    local head_repo
+    head_repo=$(github_slug "${origin}")
+    if [ -z "${head_repo}" ]; then
+        return
+    fi
+    local upstream
+    upstream=$("${GIT_BIN}" remote get-url upstream 2>/dev/null || true)
+    local base_repo
+    base_repo=$(github_slug "${upstream}")
+    if [ -z "${base_repo}" ]; then
+        base_repo="${head_repo}"
+    fi
+    local head_owner
+    head_owner="${head_repo%%/*}"
+    local head
+    head="${head_owner}:${branch}"
+    title_it "Checking for pull request ${head} in ${base_repo}"
+    local count
+    if ! count=$(gh pr list --repo "${base_repo}" --head "${head}" --state open --json number --jq length 2>/dev/null); then
+        warn_it "Failed to check pull requests with gh, skipping pull request creation"
+        return
+    fi
+    if [ "${count}" != '0' ]; then
+        title_it "Pull request already exists for ${head}"
+        return
+    fi
+    title_it "Creating pull request for ${head}"
+    if ! gh pr create --repo "${base_repo}" --head "${head}" --fill; then
+        warn_it "Failed to create pull request with gh"
+    fi
+}
+
 # shellcheck disable=SC2154
 "${base}/pull" "$*"
 
@@ -24,6 +76,7 @@ attempt=1
 while (( attempt <= max )); do
     title_it "Pushing to origin/${branch} (attempt no.${attempt}/${max})"
     if bash_it "${GIT_BIN}" push origin "${branch}"; then
+        maybe_create_pull_request "${branch}"
         exit 0
     fi
     attempt=$(( attempt + 1 ))
