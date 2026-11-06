@@ -19,6 +19,7 @@ jobs:
         python-version: ['3.9', '3.12']
     runs-on: ${{ matrix.os }}
     env:
+      UV_PYTHON: ${{ matrix.python-version }}
       GITTED_TESTING: true
       GITTED_BATCH: true
     defaults:
@@ -36,6 +37,14 @@ jobs:
           cache-dependency-glob: "pyproject.toml"
       - run: uv --color=never python install ${{ matrix.python-version }}
       - run: uv --color=never sync --all-extras --dev
+      - name: Verify the selected Python version
+        run: |
+          uv run python - <<'PYTHON'
+          import os
+          import sys
+          expected = tuple(map(int, os.environ["UV_PYTHON"].split(".")))
+          assert sys.version_info[:2] == expected, sys.version
+          PYTHON
       - run: make -e
       - run: uv --color=never build --no-build-logs
       - run: uv pip install dist/*.whl
