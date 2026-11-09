@@ -4,8 +4,8 @@
 import os
 import re
 import time
-from openai import APIConnectionError, APITimeoutError, OpenAI
 
+from openai import APIConnectionError, APITimeoutError, OpenAI
 
 MAX_CHUNK_LINES = 200
 MAX_OPENAI_ATTEMPTS = 4
@@ -46,9 +46,7 @@ def is_summarizable_chunk(chunk: str) -> bool:
     skip_extensions = {'.svg'}
     if extension in skip_extensions:
         return False
-    if chunk.count('\n') > MAX_CHUNK_LINES:
-        return False
-    return True
+    return chunk.count('\n') <= MAX_CHUNK_LINES
 
 
 def prepare_diff(diff: str) -> str:

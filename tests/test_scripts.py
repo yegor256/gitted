@@ -1,8 +1,8 @@
 # SPDX-FileCopyrightText: Copyright (c) 2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
-import subprocess
 import os
+import subprocess
 import sys
 from pathlib import Path
 
@@ -20,7 +20,7 @@ def run_script(script_name, args=None, cwd=None):
     if args:
         cmd.extend(args)
     return subprocess.run(
-        cmd, capture_output=True, text=True, cwd=cwd,
+        cmd, check=False, capture_output=True, text=True, cwd=cwd,
         shell=(sys.platform == "win32")
     )
 

@@ -426,6 +426,7 @@ index 1234567..abcdefg 100644
 
     def test_retries_on_api_timeout_then_succeeds(self, monkeypatch):
         import time
+
         import httpx
         from openai import APITimeoutError
         monkeypatch.delenv('GITTED_TESTING', raising=False)
@@ -482,6 +483,7 @@ index 0000000..1234567
 
     def test_retries_on_api_connection_error_then_succeeds(self, monkeypatch):
         import time
+
         import httpx
         from openai import APIConnectionError
         monkeypatch.delenv('GITTED_TESTING', raising=False)
@@ -535,6 +537,7 @@ index e69de29..d95f3ad 100644
 
     def test_raises_after_max_retries_exhausted(self, monkeypatch):
         import time
+
         import httpx
         import pytest
         from openai import APITimeoutError
