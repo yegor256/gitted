@@ -6,7 +6,7 @@
 SHELL := /bin/bash
 .SHELLFLAGS := -e -o pipefail -c
 
-PYS = $(wildcard src/**.py)
+PYS = $(wildcard src/gitted/*.py)
 TESTS = $(subst tests.sh/,,$(wildcard tests.sh/*.sh))
 RESULTS = $(addprefix target/logs/,$(addsuffix .txt,$(TESTS)))
 SCRIPTS = $(wildcard scripts/*)
